@@ -1,0 +1,37 @@
+import "MeshFlit.poosl"
+import "../common/NetworkInterface.poosl"
+import "nodecoordination.poosl"
+
+process class MeshNetworkInterface (NumberOfXNodes: Integer, NumberOfYNodes: Integer)
+extends NetworkInterface
+
+ports
+	// no new ports compared to NetworkInterface
+	
+messages
+	// no new messages compared to NetworkInterface
+
+variables
+	Locator: NodeMap
+init
+	InitialiseMesh()()
+
+methods
+
+	ForwardToNetwork()() |p: Packet, f: Flit|
+	// override the method to create MseshFlits with routing information 
+	
+		/* Forwards a packet in the buffer as a flit to the router using relative destination coordinates */
+		
+		[InputBuffer isEmpty not] p := InputBuffer inspect;
+		f := new(MeshFlit) setPacket(p) setDestinationCoordinates(Locator getCoordinatesOf(p getDestination) minus(Locator getCoordinatesOf(MyID)));
+		Network!Flit(f);
+		InputBuffer remove;
+		ForwardToNetwork()()
+		
+	// additional initialisation compared to the super class
+	InitialiseMesh()()
+		Locator := new(NodeMap) init(NumberOfXNodes, NumberOfYNodes);
+		Initialise()()
+
+		
