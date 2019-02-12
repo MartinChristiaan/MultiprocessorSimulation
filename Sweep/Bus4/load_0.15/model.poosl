@@ -14,13 +14,13 @@ instances
 // 	NIBufferCapacity		capacity of the input buffers of the network interfaces
 // 	NumberOfNodes			the number of nodes in the network
 
-	Network: Bus_4_nodes(
+	Network: Bus_N_nodes(
 		AccuracyCheckInterval := 1.0, 
 		ArbiterProcessingTime := 0.00015,
 		BusTransferDelay := 0.00025, 
 		LinkCapacity := 600.0, 
 		Load := 0.15, 
 		MeanBurstSize := 12.0,
-		NIBufferCapacity := 3, 
+		NIBufferCapacity := 2.0, 
 		NumberOfNodes := 4)
 channels

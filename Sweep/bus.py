@@ -1,37 +1,17 @@
 
 import run_network_model
-import os, numpy
+import os
+import numpy as np
 import pandas as pd
 from autosim import autosim,get_all_combinations
-
-
-# def generate_model(nrNodes):
-#     instancesfile = open("demofile.txt")
-#     basednetworkfile = open("")
-#     node_declrs = []
-#     channel_declrs = []
-#     ports =[]
-#     interface_instances = []
-#     arbiter_channels = []
-#     bus_channels = []
-#     interface_channels = []
-#     for node in range(nrNodes):
-#         node_declr = "N" + str(node) + ": Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 1, NumberOfNodes := NumberOfNodes)"
-#         node_declrs.append(node_declr)
-#         channel_declr = "{N"+str(node) +".NI, Network.Node"+str(node) + " }"
-#         channel_declrs.append(channel_declr) 
-
-        
-
-
-
-
+import copypastahero
 
 def readLog(fname):
     if not os.path.exists(fname):
         raise Exception("Unable to read log: \"{0}\" does not exist!".format(fname))
         
     with open(fname) as log_file:
+        value = np.nan
         for line in log_file:
             parts = line.split('\t')
             try:
@@ -41,17 +21,24 @@ def readLog(fname):
         return value
 
 
-def simulate(nrNodes,load_value,NIBufferCapacity,SoC_type):
-    output_directory_template = 'Bus4/load_{0}'
-    model_path = 'C:\\Users\\marti\\source\\repos\\Multiprocessing\\POOSL_IDE'
-
+def simulate(nrNodes,load_value,NIBufferCapacity):
+    output_directory_template = 'Bus4/nrNodes_' + str(nrNodes) + "_load_" + str(load_value) + "_bufcap_" + str(NIBufferCapacity)
+    model_path = os.getcwd()+'\\POOSL_IDE'
+    instances_path = model_path + "\\bus\\instances.poosl"
+    network_path = model_path + "\\bus\\BusBasedNetwork.poosl"
     nrNodes = int(nrNodes)
-    output_directory = os.path.abspath(output_directory_template.format(load_value))
+    
+    # Generate code for n nodes
+    copypastahero.cook_copypasta('BasedNetworkSource.poosl',network_path,nrNodes)
+    copypastahero.cook_copypasta('instancesSource.poosl',instances_path,nrNodes)    
+
+    output_directory = os.path.abspath(output_directory_template)
     model_parameters = {'Load' : load_value, 
-                        'NIBufferCapacity' : NIBufferCapacity,
-                        'SoC_type' :  SoC_type,
+                        'NIBufferCapacity' : int(NIBufferCapacity),
+                        'SoC_type' :  "Bus_N_nodes",
                         'NumberOfNodes' : nrNodes
                         }
+
     if run_network_model.run_network_model(
             [model_path], # library paths
             open('bus_template.poosl').read(), # system instance template
@@ -59,18 +46,17 @@ def simulate(nrNodes,load_value,NIBufferCapacity,SoC_type):
         raise Exception("Model did not terminate to completion, check the output of Rotalumis!")
         output_directory = os.path.abspath(output_directory_template.format(load_value))
 
-    latency_names = []
-    sendrate_names = []
-    latency_values = []
-    sendrate_values = []
+    latency_names = ["Latency Average","Latency Min","Latency Max"]
+    sendrate_names = ["Sendrate Average","Sendrate Min","Sendrate Max"]
+    latency = []
+    sendrate = []
     for i in range(1, nrNodes + 1):
-        latency_names+=[("Latency{0}".format(i))]
-        sendrate_names+=[("Sendrate{0}".format(i))]
-
-        latency_values += [readLog(os.path.join(output_directory, latency_names[i-1]) + ".log")]
-        sendrate_values += [readLog(os.path.join(output_directory, sendrate_names[i-1]) + ".log")]
+        latency += [readLog(os.path.join(output_directory, "latency"+str(i)) + ".log")]
+        sendrate += [readLog(os.path.join(output_directory, "sendrate"+str(i)) + ".log")]
     
-    return latency_names+sendrate_names,latency_values + sendrate_values
+    
+    
+    return latency_names+sendrate_names,[np.mean(latency),np.min(latency),np.max(latency),np.mean(sendrate),np.min(sendrate),np.max(sendrate)]
 
 
 config_df = pd.read_csv("config.csv")

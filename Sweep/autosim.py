@@ -53,19 +53,23 @@ def autosim(simfun,config_df,resultpath="result.csv"):
             str_1 += " " + cname + " : " + str(row.values[j])
 
         itemsleft = config_df.shape[0]-i
-        mystr = "items left : " + str(itemsleft)+ " ,time last sim :  {:.2f}".format(dt*1000) + " ms ,est time rem : " + str(itemsleft * dt) + " sec"  
+        mystr = "items left : " + str(itemsleft)+ " ,time last sim :  {:.2f}".format(dt) + " sec ,est time rem : " + str(itemsleft * dt) + " sec"  
         
         print(str_1)
         print(mystr)
-
-        names,vals = simfun(*tuple(row))
-        colnames = names
-        colnames.extend(config_df.columns)
-        
-        newrow = vals
-        newrow.extend(row)
-        row_df = pd.DataFrame([newrow],columns = colnames)
-        result_df = result_df.append(row_df) 
+        try:
+            names,vals = simfun(*tuple(row))
+            colnames = names
+            colnames.extend(config_df.columns)
+            
+            newrow = vals
+            newrow.extend(row)
+            row_df = pd.DataFrame([newrow],columns = colnames)
+            result_df = result_df.append(row_df)
+        except Exception:
+            print("There was a failure for " + str_1)
+            
+ 
         dt = time.time()-tstart
 
     if resultpath!=None:

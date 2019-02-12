@@ -4,23 +4,25 @@ import "Arbiter.poosl"
 cluster class BusBasedNetwork2 (ArbiterProcessingTime: Real, BusTransferDelay: Real, NIBufferCapacity: Integer, NumberOfNodes: Integer)
 // a network with a bus, an arbiter and four network interfaces
 // Parameters:
-//	ArbiterProcessingTime:	time the arbiter takes to resolve arbitration
-//	BusTransferDelay:		time the bus takes for a transfer
-//	NIBufferCapacity:		buffer capacity of the input buffers from the nodes of the network interfaces
-//	NumberOfNodes:			the number of nodes connected to the network (max. 4 for this cluster class)
+// ArbiterProcessingTime: time the arbiter takes to resolve arbitration
+// BusTransferDelay: time the bus takes for a transfer
+// NIBufferCapacity: buffer capacity of the input buffers from the nodes of the network interfaces
+// NumberOfNodes: the number of nodes connected to the network (max. 4 for this cluster class)
 
 ports
-	Node1, Node2, Node3, Node4,Node5,Node6
+Node1, Node2, Node3, Node4
 instances
-	Arbiter: Arbiter(NumberOfNIs := NumberOfNodes, ProcessingTime := ArbiterProcessingTime)
+Arbiter: Arbiter(NumberOfNIs := NumberOfNodes, ProcessingTime := ArbiterProcessingTime)
 	NI1: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 1, TransferDelay := BusTransferDelay)
 	NI2: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 2, TransferDelay := BusTransferDelay)
 	NI3: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 3, TransferDelay := BusTransferDelay)
+	NI4: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 4, TransferDelay := BusTransferDelay)
 
 channels
-	{ Arbiter.NI, NI1.Arbiter, NI2.Arbiter, NI3.Arbiter, NI4.Arbiter,NI5.Arbiter,NI6.Arbiter } 
-	{ NI1.Bus, NI2.Bus, NI3.Bus, NI4.Bus, NI5.Bus, NI6.Bus } 
+{ Arbiter.NI, NI1.Arbiter, NI2.Arbiter, NI3.Arbiter, NI4.Arbiter }
+{ NI1.Bus, NI2.Bus, NI3.Bus, NI4.Bus }
 	{ Node1, NI1.Node } 
 	{ Node2, NI2.Node } 
 	{ Node3, NI3.Node } 
-	
+	{ Node4, NI4.Node } 
+

@@ -1,3 +1,2 @@
-﻿NumberOfNodes,Load Value,NIBufferCapacity,SoC_type
-4,0.15,2,Bus_4_nodes
-,0.45,3,
+﻿NumberOfNodes,Load Value,NIBufferCapacity
+10,0.45,2

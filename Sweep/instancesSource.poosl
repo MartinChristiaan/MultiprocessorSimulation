@@ -1,7 +1,7 @@
 import "../common/Node.poosl"
 import "BusBasedNetwork.poosl"
 	
-cluster class Bus_6_nodes (AccuracyCheckInterval: Real, ArbiterProcessingTime: Real, BusTransferDelay: Real, LinkCapacity: Real, Load: Real, MeanBurstSize: Real, NIBufferCapacity: Integer, NumberOfNodes: Integer)
+cluster class Bus_N_nodes (AccuracyCheckInterval: Real, ArbiterProcessingTime: Real, BusTransferDelay: Real, LinkCapacity: Real, Load: Real, MeanBurstSize: Real, NIBufferCapacity: Integer, NumberOfNodes: Integer)
 // cluster class representing an SoC with a bus-based network
 // Parameters:
 // 	AccuracyCheckInterval	(simulated) time interval to check accuracy of the statistical estimators 

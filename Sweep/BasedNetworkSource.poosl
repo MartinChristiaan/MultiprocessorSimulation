@@ -10,7 +10,7 @@ cluster class BusBasedNetwork2 (ArbiterProcessingTime: Real, BusTransferDelay: R
 //	NumberOfNodes:			the number of nodes connected to the network (max. 4 for this cluster class)
 
 ports
-	Node1, Node2, Node3, Node4,Node5,Node6
+	Node1, Node2, Node3, Node4, Node5, Node6
 instances
 	Arbiter: Arbiter(NumberOfNIs := NumberOfNodes, ProcessingTime := ArbiterProcessingTime)
 	NI1: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 1, TransferDelay := BusTransferDelay)
@@ -21,7 +21,7 @@ instances
 	NI6: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 6, TransferDelay := BusTransferDelay)
 
 channels
-	{ Arbiter.NI, NI1.Arbiter, NI2.Arbiter, NI3.Arbiter, NI4.Arbiter,NI5.Arbiter,NI6.Arbiter } 
+	{ Arbiter.NI, NI1.Arbiter, NI2.Arbiter, NI3.Arbiter, NI4.Arbiter, NI5.Arbiter, NI6.Arbiter } 
 	{ NI1.Bus, NI2.Bus, NI3.Bus, NI4.Bus, NI5.Bus, NI6.Bus } 
 	{ Node1, NI1.Node } 
 	{ Node2, NI2.Node } 
