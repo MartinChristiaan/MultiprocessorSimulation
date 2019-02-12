@@ -1,0 +1,56 @@
+import "Flit.poosl"
+import "../libraries/structures.poosl"
+
+process class Fifo (Capacity: Integer, ProcessingTime: Real)
+// A Fifo models a bounded FIFO buffer for flits, including the time it takes to (concurrently) read and write Flits 
+// Parameters:
+//	Capacity: 		the number of flits that can be stored in the Fifo
+//  ProcessingTime: the amount of time it takes to process a single flit on input or output
+
+ports
+	In, Out
+
+messages
+	In?Flit(Flit),
+	Out!Flit(Flit)
+
+variables
+	Buffer: Queue
+
+init
+	Initialise()()
+
+methods
+	HandleInput()() |f: Flit|
+	// deals with the input side of the FIFO 
+		// read a flit under the condition that the data object Buffer that actually stores the Flits is not yet filled to capacity
+		// Atomically (immediately) after receiving the flit, add it to the Buffer 
+		[Buffer isFull not] In?Flit(f){Buffer add(f)};
+		// delay for a bit, modelling the processing time
+		delay(ProcessingTime);
+		// repeat the same behaviour by calling the method again
+		HandleInput()()
+	
+	HandleOutput()() |f: Flit|
+	// deals with the output side of the FIFO
+		// if the buffer is not empty, inspect the flit from the front of the queue (without removing it yet!)
+		[Buffer isEmpty not] f := Buffer inspect;
+		// send the flit to the receiver
+		Out!Flit(f);
+		// delay for a bit, modelling the processing time
+		delay(ProcessingTime);
+		// now we can remove the flit from the buffer making room for additional flits
+		Buffer remove;
+		// repeat the same behaviour by calling the method again
+		HandleOutput()()
+	
+	Initialise()()
+	// Initialisation method
+		// Create the data object that will hold the flits in a Fifo queue manner and set its capacity 
+		Buffer := new(Queue) resize(Capacity);
+		// concurrently start handling input and output. These method calls will never terminate.
+		par
+			HandleInput()()
+		and
+			HandleOutput()()
+		rap

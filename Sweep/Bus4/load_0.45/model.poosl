@@ -1,6 +1,6 @@
-import "bus/instances.poosl"
+importlib "bus/instances.poosl"
 system
-// here the overall system is created by instantiating the SoC_Bus cluster class
+// here the overall system is created by instantiating the Network cluster class
 // here we provide all the values for the model parameters
 
 instances
@@ -15,14 +15,12 @@ instances
 // 	NumberOfNodes			the number of nodes in the network
 
 	Network: Bus_4_nodes(
-				AccuracyCheckInterval := 1.0, 
-				ArbiterProcessingTime := 0.00015, 
-				BusTransferDelay := 0.00025, 
-				LinkCapacity := 600.0, 
-				Load := 0.95, 
-				MeanBurstSize := 12.0, 
-				NIBufferCapacity := 2, 
-				NumberOfNodes := 4
-			)
-
+		AccuracyCheckInterval := 1.0, 
+		ArbiterProcessingTime := 0.00015,
+		BusTransferDelay := 0.00025, 
+		LinkCapacity := 600.0, 
+		Load := 0.45, 
+		MeanBurstSize := 12.0,
+		NIBufferCapacity := 3, 
+		NumberOfNodes := 4)
 channels

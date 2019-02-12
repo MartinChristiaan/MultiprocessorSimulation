@@ -21,6 +21,6 @@ instances
 		LinkCapacity := 600.0, 
 		Load := 0.15, 
 		MeanBurstSize := 12.0,
-		NIBufferCapacity := 2, 
+		NIBufferCapacity := 3, 
 		NumberOfNodes := 4)
 channels

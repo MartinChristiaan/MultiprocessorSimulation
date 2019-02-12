@@ -1,4 +1,3 @@
-﻿ColA,ColB
-1,4
-2,5
-3,6
+﻿NumberOfNodes,Load Value,NIBufferCapacity,SoC_type
+4,0.15,2,Bus_4_nodes
+,0.45,3,
