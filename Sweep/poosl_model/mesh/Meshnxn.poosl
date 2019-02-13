@@ -1,0 +1,73 @@
+import "Router.poosl"
+
+cluster class Meshnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
+ports
+	In1, In2, In3, In4, // Node input ports 
+	
+	IXL1, IXL3, // Input from left
+	IXR2, IXR4, // Input from right
+	
+	IYB3, IYB4, // Input from bottom
+	IYT1, IYT2, // Input from top
+	
+	Out1, Out2, Out3, Out4, // Node output ports
+	 
+	OXL1, OXL3, // Output to left 
+	OXR2, OXR4, // Output to right
+	OYB3, OYB4, // Output to bottom
+	OYT1, OYT2  // Output to top 
+
+instances
+	F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	F13: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	F21: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	F24: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	F31: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	F34: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	F42: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	F43: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	R1: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+	R2: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+	R3: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+	R4: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+channels
+	{In1, R1.In } 
+	{In2, R2.In } 
+	{In3, R3.In } 
+	{In4, R4.In } 
+	{IXL1, R1.IXL } 
+	{F12.Out, R2.IXL } 
+	{IXL3, R3.IXL } 
+	{F34.Out, R4.IXL } 
+	{F21.Out, R1.IXR } 
+	{IXR2, R2.IXR } 
+	{F43.Out, R3.IXR } 
+	{IXR4, R4.IXR } 
+	{F31.Out, R1.IYB } 
+	{F42.Out, R2.IYB } 
+	{IYB3, R3.IYB } 
+	{IYB4, R4.IYB } 
+	{IYT1, R1.IYT } 
+	{IYT2, R2.IYT } 
+	{F13.Out, R3.IYT } 
+	{F24.Out, R4.IYT } 
+	{Out1, R1.Out } 
+	{Out2, R2.Out } 
+	{Out3, R3.Out } 
+	{Out4, R4.Out } 
+	{OXL1, R1.OXL } 
+	{F21.In, R2.OXL } 
+	{OXL3, R3.OXL } 
+	{F43.In, R4.OXL } 
+	{F12.In, R1.OXR } 
+	{OXR2, R2.OXR } 
+	{F34.In, R3.OXR } 
+	{OXR4, R4.OXR } 
+	{F13.In, R1.OYB } 
+	{F24.In, R2.OYB } 
+	{OYB3, R3.OYB } 
+	{OYB4, R4.OYB } 
+	{OYT1, R1.OYT } 
+	{OYT2, R2.OYT } 
+	{F31.In, R3.OYT } 
+	{F42.In, R4.OYT }

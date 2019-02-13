@@ -74,7 +74,7 @@ def cook_copypasta(source,dest,nduplicates):
     f = open(dest,'w')
     f.writelines(lines)
     f.close()
-cook_copypasta('BasedNetworkSource.poosl','output.poosl',10)
+#cook_copypasta('BasedNetworkSource.poosl','output.poosl',10)
 
 
 

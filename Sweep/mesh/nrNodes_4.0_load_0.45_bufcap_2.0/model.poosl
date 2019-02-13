@@ -1,0 +1,17 @@
+importlib "mesh/instances.poosl"
+
+system
+instances
+	SoC: Mesh_2x2(
+		AccuracyCheckInterval := 1.0, 
+		FifoCapacity := 2, 
+		FifoProcessingTime := 0.00025, 
+		LinkCapacity := 600.0, 
+		Load := 0.45, 
+		MeanBurstSize := 12.0, 
+		NIBufferCapacity := 2, 
+		NumberOfXNodes := 2, 
+		NumberOfYNodes := 2, 
+		RouterProcessingTime := 0.0006,
+		NITransferDelay := 0.0005)
+channels
