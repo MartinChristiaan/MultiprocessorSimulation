@@ -21,8 +21,11 @@ def cook_copypasta(source,dest,nduplicates):
             for j in range(nduplicates-1):
                 #print(str(len(lines)) + " , ins : " + str(i+j+1))
                 myline = lines[i]
+                pos_shift=0
                 for num_pos in lines_numberpositions[i]:
-                    myline = myline[:num_pos] + str(j+2) + myline[num_pos+1:]
+                    myline = myline[:num_pos+pos_shift] + str(j+2) + myline[num_pos+1+pos_shift:]
+                    pos_shift+=len(str(j+2))-1
+
                 lines.insert(i+j+1,myline)
                 lines_numberpositions.insert(i+j+1,[])
                 lines_nonumbers.insert(i+j+1,"")
@@ -71,7 +74,7 @@ def cook_copypasta(source,dest,nduplicates):
     f = open(dest,'w')
     f.writelines(lines)
     f.close()
-#cook_copypasta('BasedNetworkSource.poosl',4)
+cook_copypasta('BasedNetworkSource.poosl','output.poosl',10)
 
 
 

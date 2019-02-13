@@ -10,7 +10,7 @@ cluster class BusBasedNetwork2 (ArbiterProcessingTime: Real, BusTransferDelay: R
 // NumberOfNodes: the number of nodes connected to the network (max. 4 for this cluster class)
 
 ports
-Node1, Node2, Node3, Node4, Node5, Node6, Node7, Node8, Node9, Node10
+Node1, Node2, Node3, Node4, Node5, Node6, Node7, Node8, Node9, Node10, Node11, Node12, Node13, Node14, Node15, Node16
 instances
 Arbiter: Arbiter(NumberOfNIs := NumberOfNodes, ProcessingTime := ArbiterProcessingTime)
 	NI1: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 1, TransferDelay := BusTransferDelay)
@@ -22,11 +22,17 @@ Arbiter: Arbiter(NumberOfNIs := NumberOfNodes, ProcessingTime := ArbiterProcessi
 	NI7: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 7, TransferDelay := BusTransferDelay)
 	NI8: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 8, TransferDelay := BusTransferDelay)
 	NI9: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 9, TransferDelay := BusTransferDelay)
-	NI10: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID :=101, TransferDelay := BusTransferDelay)
+	NI10: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 10, TransferDelay := BusTransferDelay)
+	NI11: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 11, TransferDelay := BusTransferDelay)
+	NI12: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 12, TransferDelay := BusTransferDelay)
+	NI13: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 13, TransferDelay := BusTransferDelay)
+	NI14: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 14, TransferDelay := BusTransferDelay)
+	NI15: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 15, TransferDelay := BusTransferDelay)
+	NI16: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 16, TransferDelay := BusTransferDelay)
 
 channels
-{ Arbiter.NI, NI1.Arbiter, NI2.Arbiter, NI3.Arbiter, NI4.Arbiter, NI5.Arbiter, NI6.Arbiter, NI7.Arbiter, NI8.Arbiter, NI9.Arbiter, NI10.Arbiter }
-{ NI1.Bus, NI2.Bus, NI3.Bus, NI4.Bus, NI5.Bus, NI6.Bus, NI7.Bus, NI8.Bus, NI9.Bus, NI10.Bus }
+{ Arbiter.NI, NI1.Arbiter, NI2.Arbiter, NI3.Arbiter, NI4.Arbiter, NI5.Arbiter, NI6.Arbiter, NI7.Arbiter, NI8.Arbiter, NI9.Arbiter, NI10.Arbiter, NI11.Arbiter, NI12.Arbiter, NI13.Arbiter, NI14.Arbiter, NI15.Arbiter, NI16.Arbiter }
+{ NI1.Bus, NI2.Bus, NI3.Bus, NI4.Bus, NI5.Bus, NI6.Bus, NI7.Bus, NI8.Bus, NI9.Bus, NI10.Bus, NI11.Bus, NI12.Bus, NI13.Bus, NI14.Bus, NI15.Bus, NI16.Bus }
 	{ Node1, NI1.Node } 
 	{ Node2, NI2.Node } 
 	{ Node3, NI3.Node } 
@@ -36,5 +42,11 @@ channels
 	{ Node7, NI7.Node } 
 	{ Node8, NI8.Node } 
 	{ Node9, NI9.Node } 
-	{ Node10, N101.Node } 
+	{ Node10, NI10.Node } 
+	{ Node11, NI11.Node } 
+	{ Node12, NI12.Node } 
+	{ Node13, NI13.Node } 
+	{ Node14, NI14.Node } 
+	{ Node15, NI15.Node } 
+	{ Node16, NI16.Node } 
 

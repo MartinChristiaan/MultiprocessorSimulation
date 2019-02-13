@@ -25,7 +25,13 @@ instances
 	N7: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 7, NumberOfNodes := NumberOfNodes)
 	N8: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 8, NumberOfNodes := NumberOfNodes)
 	N9: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 9, NumberOfNodes := NumberOfNodes)
-	N10: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID :=101, NumberOfNodes := NumberOfNodes)
+	N10: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 10, NumberOfNodes := NumberOfNodes)
+	N11: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 11, NumberOfNodes := NumberOfNodes)
+	N12: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 12, NumberOfNodes := NumberOfNodes)
+	N13: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 13, NumberOfNodes := NumberOfNodes)
+	N14: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 14, NumberOfNodes := NumberOfNodes)
+	N15: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 15, NumberOfNodes := NumberOfNodes)
+	N16: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 16, NumberOfNodes := NumberOfNodes)
 Network: BusBasedNetwork2(ArbiterProcessingTime := ArbiterProcessingTime, BusTransferDelay := BusTransferDelay, NIBufferCapacity := NIBufferCapacity, NumberOfNodes := NumberOfNodes)
 
 channels
@@ -38,5 +44,11 @@ channels
 	{ N7.NI, Network.Node7 } 
 	{ N8.NI, Network.Node8 } 
 	{ N9.NI, Network.Node9 } 
-	{ N10.NI, Network.Nod101 } 
+	{ N10.NI, Network.Node10 } 
+	{ N11.NI, Network.Node11 } 
+	{ N12.NI, Network.Node12 } 
+	{ N13.NI, Network.Node13 } 
+	{ N14.NI, Network.Node14 } 
+	{ N15.NI, Network.Node15 } 
+	{ N16.NI, Network.Node16 } 
 

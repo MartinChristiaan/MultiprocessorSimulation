@@ -1,2 +1,5 @@
 ﻿NumberOfNodes,Load Value,NIBufferCapacity
-10,0.45,2
+4,0.45,2
+8,0.15,1
+12,0.95,3
+16,,
