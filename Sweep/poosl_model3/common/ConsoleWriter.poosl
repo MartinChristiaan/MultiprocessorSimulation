@@ -1,0 +1,7 @@
+native data class ConsoleWriter
+// A native (built-in) class for writing to console screen and reading from console
+
+variables
+methods
+        native write(s:String): ConsoleWriter
+        native writeError(s:String):ConsoleWriter

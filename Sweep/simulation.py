@@ -4,6 +4,7 @@ import os
 import numpy as np
 import pandas as pd
 from autosim import autosim,get_all_combinations
+from autosim_multiproc import autosim_multiproc
 import copypastahero
 from math import sqrt
 def readLog(fname):
@@ -37,16 +38,16 @@ def parse_results(nrNodes,output_directory):
 
 
 
-def simulate_bus(nrNodes,load_value,NIBufferCapacity):
+def simulate_bus(nrNodes,load_value,NIBufferCapacity,myid):
     output_directory_template = 'Bus4/nrNodes_' + str(nrNodes) + "_load_" + str(load_value) + "_bufcap_" + str(NIBufferCapacity)
-    model_path = os.getcwd()+'\\poosl_model'
+    model_path = os.getcwd()+'\\poosl_model'+str(myid)
     instances_path = model_path + "\\bus\\instances.poosl"
     network_path = model_path + "\\bus\\BusBasedNetwork.poosl"
     nrNodes = int(nrNodes)
     
     # Generate code for n nodes
-    copypastahero.cook_copypasta('BasedNetworkSource.poosl',network_path,nrNodes)
-    copypastahero.cook_copypasta('instancesSource.poosl',instances_path,nrNodes)    
+    copypastahero.cook_copypasta('sourcefiles\\BasedNetworkSource.poosl',network_path,nrNodes)
+    copypastahero.cook_copypasta('sourcefiles\\instancesSource.poosl',instances_path,nrNodes)    
 
     output_directory = os.path.abspath(output_directory_template)
     model_parameters = {'Load' : load_value, 
@@ -56,30 +57,31 @@ def simulate_bus(nrNodes,load_value,NIBufferCapacity):
                         }
     if run_network_model.run_network_model(
         [model_path], # library paths
-        open('bus_template.poosl').read(), # system instance template
+        open('sourcefiles\\bus_template.poosl').read(), # system instance template
         nrNodes, model_parameters, output_directory) == False:
             raise Exception("Model did not terminate to completion, check the output of Rotalumis!")
     
     output_directory = os.path.abspath(output_directory_template.format(load_value))
     return parse_results(nrNodes,output_directory)
 
-def simulate_mesh(nrNodes,load_value,NIBufferCapacity):
+def simulate_mesh(nrNodes,load_value,NIBufferCapacity,myid):
     output_directory_template = 'mesh/nrNodes_' + str(nrNodes) + "_load_" + str(load_value) + "_bufcap_" + str(NIBufferCapacity)
-    model_path = os.getcwd()+'\\poosl_model'
-    # instances_path = model_path + "\\bus\\instances.poosl"
-    # network_path = model_path + "\\bus\\BusBasedNetwork.poosl"
+    model_path = os.getcwd()+'\\poosl_model'+str(myid)
+    instances_path = model_path + "\\mesh\\instances.poosl"
+    network_path = model_path + "\\mesh\\MeshBasedNetwork.poosl"
     nrNodes = int(nrNodes)
-    
+    dim = int(sqrt(nrNodes))
     # Generate code for n nodes
-    # copypastahero.cook_copypasta('BasedNetworkSource.poosl',network_path,nrNodes)
-    # copypastahero.cook_copypasta('instancesSource.poosl',instances_path,nrNodes)    
+    copypastahero.cook_copypasta('sourcefiles\\MeshBasedNetwork.poosl',network_path,nrNodes)
+    copypastahero.cook_copypasta('sourcefiles\\mesh_instances.poosl',instances_path,nrNodes)    
+    copypastahero.cook_mesh(dim,model_path + "\\mesh\\Meshnxn.poosl")
 
     output_directory = os.path.abspath(output_directory_template)
     model_parameters = {'Load' : load_value, 
                         'NIBufferCapacity' : int(NIBufferCapacity),
-                        'SoC_type' : 'Mesh_2x2',
-                        'NumberOfXNodes' : int(sqrt(nrNodes)),
-                        'NumberOfYNodes' : int(sqrt(nrNodes))
+                        'SoC_type' : 'Mesh_nxn',
+                        'NumberOfXNodes' : dim,
+                        'NumberOfYNodes' : dim
                         }
     if run_network_model.run_network_model(
         [model_path], # library paths
@@ -90,9 +92,10 @@ def simulate_mesh(nrNodes,load_value,NIBufferCapacity):
     output_directory = os.path.abspath(output_directory_template.format(load_value))
     return parse_results(nrNodes,output_directory)
 
-config_df = pd.read_csv("config.csv")
-combi_config = get_all_combinations(config_df)
-autosim(simulate_mesh,combi_config,resultpath="results/Mesh/results.csv")
+if __name__ == "__main__":
+    config_df = pd.read_csv("config.csv")
+    combi_config = get_all_combinations(config_df)
+    autosim_multiproc(simulate_mesh,combi_config,resultpath="results/Mesh/results.csv")
 
 
 

@@ -1,0 +1,33 @@
+import "../common/Fifo.poosl"
+import "RandomRouter_2Ports.poosl"
+
+cluster class CRouter_2Ports (RouterProcessingTime: Real, MyNI: Integer, InputQueueCapacity: Integer, InputQueueProcessingTime: Real)
+// a cluster class representing a router with input queues
+
+ports
+	InNode, 
+	In1, 
+	In2,
+	OutNode, 
+	Out1, 
+	Out2
+	
+instances
+	Router: RandomRouter_2Ports(ProcessingTime := RouterProcessingTime, MyNI := MyNI)
+
+InputQueue1 : Fifo(Capacity := InputQueueCapacity, ProcessingTime := InputQueueProcessingTime)
+InputQueue2 : Fifo(Capacity := InputQueueCapacity, ProcessingTime := InputQueueProcessingTime)
+
+
+channels
+	{ InNode, Router.InNode } 
+	 
+	 
+	 
+	 
+	{ InputQueue1.In, In1 } 
+	{ Router.In1, InputQueue1.Out }{ Router.OutNode, OutNode } 
+	{ InputQueue2.In, In2 }
+	{ Router.In2, InputQueue2.Out }
+	{ Router.Out1, Out1 }
+	{ Router.Out2, Out2 }

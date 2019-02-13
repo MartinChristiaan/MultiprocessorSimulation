@@ -2,7 +2,7 @@ importlib "mesh/instances.poosl"
 
 system
 instances
-	SoC: Mesh_2x2(
+	SoC: Mesh_nxn(
 		AccuracyCheckInterval := 1.0, 
 		FifoCapacity := 2, 
 		FifoProcessingTime := 0.00025, 

@@ -1,0 +1,57 @@
+import "../common/NetworkInterface.poosl"
+import "CRouter_2Ports.poosl"
+import "CRouter_3Ports.poosl"
+import "CRouter_4Ports.poosl"
+import "../common/Fifo.poosl"
+
+cluster class TemplateNetwork2 (NIBufferCapacity: Integer, NITransferDelay: Real, RouterProcessingTime: Real, FIFOCapacity: Integer, FIFOProcessingTime: Real)
+// 
+
+ports
+	Node1, Node2, Node3, Node4, Node5
+
+instances
+	NI1: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 1, TransferDelay := NITransferDelay)
+	NI2: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 2, TransferDelay := NITransferDelay)
+	NI3: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 3, TransferDelay := NITransferDelay)
+	NI4: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 4, TransferDelay := NITransferDelay)
+	NI5: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 5, TransferDelay := NITransferDelay)
+
+	R5: CRouter_4Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 5,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+	R4: CRouter_2Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 4,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+	R3: CRouter_3Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 3,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+	R2: CRouter_3Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 2,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+	R1: CRouter_2Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 1,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+
+
+channels
+	
+{ NI1.Node, Node1 }
+	{ NI2.Node, Node2 }
+	{ NI3.Node, Node3 }
+	{ NI4.Node, Node4 }
+	{ NI5.Node, Node5 }
+	{ NI1.Network, R1.InNode, R1.OutNode }
+	{ R1.Out2, R2.In1 }
+	{ R1.In2, R2.Out1 }
+	{ NI2.Network, R2.OutNode, R2.InNode }
+	{ R5.OutNode, NI5.Network, R5.InNode }
+	{ R5.Out1, R1.In1 }
+	{ R1.Out1, R5.In1 }
+	{ R5.Out2, R2.In2 }
+	{ R2.Out2, R5.In2 }
+	{ R3.InNode, NI3.Network, R3.OutNode }
+	{ R4.OutNode, NI4.Network, R4.InNode }
+	{ R3.In3, R4.Out2 }
+	{ R3.Out3, R4.In2 }
+	{ R5.In4, R4.Out1 }
+	{ R5.Out4, R4.In1 }
+	{ R5.Out3, R3.In1 }
+	{ R5.In3, R3.Out1 }
+	{ R2.Out3, R3.In2 }
+	{ R2.In3, R3.Out2 }

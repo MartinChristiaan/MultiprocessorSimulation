@@ -1,0 +1,60 @@
+import "RoundRobinArbiterPolicy.poosl"
+
+process class Arbiter (NumberOfNIs: Integer, ProcessingTime: Real)
+// The Arbiter for the bus.
+// Parameters:
+// 	NumberOfNIs:	the number of connected network interfaces
+//	ProcessingTime:	the time the arbiter needs to resolve one arbitration 
+
+ports
+	NI
+
+messages
+	NI!Grant(Integer),
+	NI?Release(),
+	NI?Request(Integer)
+
+variables
+	Policy: RoundRobinArbiterPolicy, Requests: BusRequests
+
+init
+	Initialise()()
+
+methods
+	Arbitrate()() |NI_ID: Integer|
+	// Arbitrate between registered requests
+		// if there is a request, then pick one according to the policy define by the object Policy
+		[Requests notIdle] NI_ID := Policy next(Requests);
+		// delay to model the time it takes for the arbitration
+		delay ProcessingTime;
+		// inform the network interface that access is granted, include the ID to signal the correct NI
+		NI!Grant(NI_ID){Requests clear(NI_ID)};
+		// wait for the NI to release the bus
+		NI?Release;
+		// repeat this method forever
+		Arbitrate()()
+	
+	HandleRequests()() |NI_ID: Integer|
+	// Register incoming requests from network interfaces
+		// receive a message with a new request from a network interface
+		NI?Request(NI_ID)
+			// and immediately after receiving, add the request to the list of requests captured by object Requests	 
+			{Requests add(NI_ID)};
+		// repeat this method forever
+		HandleRequests()()
+		
+	Initialise()()
+	// Initialisation of the arbiter
+		// create an object to hold the access requests
+		Requests := new(BusRequests) init(NumberOfNIs);
+		// create an object to represent the arbitration policy
+		Policy := new(RoundRobinArbiterPolicy);
+		
+		// concurrently handle existing requests and receive new ones
+		// both methods will never terminate
+		par
+			HandleRequests()()
+		and
+			Arbitrate()()
+		rap
+
