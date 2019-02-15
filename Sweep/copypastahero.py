@@ -76,111 +76,112 @@ def cook_copypasta(source,dest,nduplicates):
     f.writelines(lines)
     f.close()
 
-def mesh_ports(a,dim,prefix1,prefix2):
-    r = range(1,dim+1)
+def mesh_ports(a,dimx,dimy,prefix1,prefix2):
+    rx = range(1,dimx+1)
+    ry = range(1,dimy+1)
     line = ""
-    for y in r:
-        for x in r:   
-            line+= prefix1 + str(x + (y-1)*dim) + ","
+    for y in ry:
+        for x in rx:   
+            line+= prefix1 + str(x + (y-1)*dimx) + ","
     a(line)
     line_l = ""
     line_r = ""
     line_t = ""
     line_b = ""
-    for y in r:
-        for x in r:
+    for y in ry:
+        for x in rx:
             if(x==1):   
-                line_l+= prefix2+  "XL" + str(x + (y-1)*dim) + ","
-            if(x==dim):
-                line_r+= prefix2+ "XR" + str(x + (y-1)*dim) + ","
+               line_l+= prefix2+  "XL" + str(x + (y-1)*dimx) + ","
+            if(x==dimx):
+                line_r+= prefix2+ "XR" + str(x + (y-1)*dimx) + ","
             if(y==1):
-                line_t+= prefix2+ "YT" + str(x + (y-1)*dim) + ","
-            if(y==dim):
-                line_b+= prefix2+ "YB" + str(x + (y-1)*dim) + ","
+                line_t+= prefix2+ "YT" + str(x + (y-1)*dimx) + ","
+            if(y==dimy):
+                line_b+= prefix2+ "YB" + str(x + (y-1)*dimx) + ","
     a(line_l)
     a(line_r)
     a(line_b)
     a(line_t)
 
-def mesh_channels(a,dim,prefix1,prefix2):
-    r = range(1,dim+1)
-    for y in r:
-        for x in r:
-            myid = str(x + (y-1)*dim) 
+def mesh_channels(a,dimx,dimy,prefix1,prefix2):
+    rx = range(1,dimx+1)
+    ry = range(1,dimy+1)
+    for y in ry:
+        for x in rx:
+            myid = str(x + (y-1)*dimx) 
             if(x==1):   
                a("{" + prefix2+ "XL" + myid+ ", R" + myid+'.'+ prefix2 +"XL}")
-            if(x==dim):
+            if(x==dimx):
                 a("{" + prefix2+ "XR" + myid+ ", R" + myid+'.' +prefix2 +"XR}")
             if(y==1):
                 a("{"  +prefix2+ "YT" + myid+ ", R" + myid+ '.'+prefix2 +"YT}")
-            if(y==dim):
+            if(y==dimy):
                 a("{"  +prefix2+ "YB" + myid+ ", R" + myid+ '.'+prefix2 +"YB}")
-           
 
-
-def cook_mesh(dim,dest):
+def cook_mesh(dimx,dimy,dest):
    
     lines = []
-    r = range(1,dim+1)
+    rx = range(1,dimx+1)
+    ry = range(1,dimy+1)
     a = lambda line:lines.append(line + "\n")
     a('import "Router.poosl"')
     a('cluster class Meshnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)')  
     a('ports')
-    mesh_ports(a,dim,"In","I")
-    mesh_ports(a,dim,"Out","O")
+    mesh_ports(a,dimx,dimy,"In","I")
+    mesh_ports(a,dimx,dimy,"Out","O")
     lines[-1] = lines[-1][:-2]+"\n"
     a('')
     a('instances')
-    r2 = range(1,dim)
     
     baseline = ": Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)"
-    for y in r:
-        for x in r:
-            if(x<dim):   
-                a("F" + str(x + (y-1)*dim) + str(x + 1  + (y-1)*dim) + baseline) 
+    for y in ry:
+        for x in rx:
+            if(x<dimx):   
+                a("F" + str(x + (y-1)*dimx) + str(x + 1  + (y-1)*dimx) + baseline) 
             if(x>1):
-                a("F" + str(x +  (y-1)*dim) + str(x -1 + (y-1)*dim) + baseline) 
-            if(y<dim):
-                a("F" + str(x + (y-1)*dim) + str(x + y*dim) + baseline) 
+                a("F" + str(x +  (y-1)*dimx) + str(x -1 + (y-1)*dimx) + baseline) 
+            if(y<dimy):
+                a("F" + str(x + (y-1)*dimx) + str(x + y*dimx) + baseline) 
             if(y>1):
-                a("F" + str(x + (y-1)*dim) + str(x + (y-2)*dim) + baseline) 
-    for y in r:
-        for x in r:
-            myid = str(x + (y-1) * dim)
+                a("F" + str(x + (y-1)*dimx) + str(x + (y-2)*dimx) + baseline) 
+    for y in ry:
+        for x in rx:
+            myid = str(x + (y-1) * dimx)
             a("R" + myid +": Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)")
     
     a('channels')
-    for y in r:
-        for x in r:
-            myid = str(x + (y-1) * dim)
+    for y in ry:
+        for x in rx:
+            myid = str(x + (y-1) * dimx)
             a('{In'+myid+ ', R'+myid+'.In }')
             a('{Out'+myid+ ', R'+myid+'.Out }')
-    mesh_channels(a,dim,"In","I")
-    mesh_channels(a,dim,"Out","O")
+
+    mesh_channels(a,dimx,dimy,"In","I")
+    mesh_channels(a,dimx,dimy,"Out","O")
     
-    for y in r:
-        for x in r:
-            if(x<dim):
-                id1=  str(x + (y-1)*dim)
-                id2 =str(x + 1  + (y-1)*dim) 
+    for y in ry:
+        for x in rx:
+            if(x<dimx):
+                id1=  str(x + (y-1)*dimx)
+                id2 =str(x + 1  + (y-1)*dimx) 
                 myf = "F" + id1  + id2 
                 a('{' +myf+ ".In"+ ', ' + "R" + id1 + ".OXR" + '}')
                 a('{' +myf+ ".Out"+ ', ' + "R" + id2 + ".IXL" +'}')
             if(x>1):
-                id1=  str(x  +(y-1)*dim)
-                id2 =str(x - 1  + (y-1)*dim) 
+                id1=  str(x  +(y-1)*dimx)
+                id2 =str(x - 1  + (y-1)*dimx) 
                 myf = "F" + id1  + id2 
                 a('{' +myf+ ".In"+ ', ' + "R" + id1 + ".OXL" + '}')
                 a('{' +myf+ ".Out"+ ', ' + "R" + id2 + ".IXR" +'}')
-            if(y<dim):
-                id1=  str(x + (y-1)*dim)
-                id2 = str(x  + (y)*dim) 
+            if(y<dimy):
+                id1=  str(x + (y-1)*dimx)
+                id2 = str(x  + (y)*dimx) 
                 myf = "F" + id1  + id2 
                 a('{' +myf+ ".In"+ ', ' + "R" + id1 + ".OYB" + '}')
                 a('{' +myf+ ".Out"+ ', ' + "R" + id2 + ".IYT" +'}') 
             if(y>1):
-                id1=  str(x + (y-1)*dim)
-                id2 = str(x  + (y-2)*dim) 
+                id1=  str(x + (y-1)*dimx)
+                id2 = str(x  + (y-2)*dimx) 
                 myf = "F" + id1  + id2 
                 a('{' +myf+ ".In"+ ', ' + "R" + id1 + ".OYT" + '}')
                 a('{' +myf+ ".Out"+ ', ' + "R" + id2 + ".IYB" +'}')  
@@ -191,6 +192,105 @@ def cook_mesh(dim,dest):
     f.writelines(lines)
     f.close()           
 
+
+def cook_torus(dimx,dimy,dest):
+   
+    lines = []
+    a = lambda line:lines.append(line + "\n")
+    a('import "Router.poosl"')
+    a('cluster class Torusnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)')  
+    a('ports')
+    rx = range(1,dimx+1)
+    ry = range(1,dimy+1)
+    
+    line = ""
+    for y in ry:
+        for x in rx:   
+            line+= "In" + str(x + (y-1)*dimx) + ","
+    a(line)
+    line = ""
+    for y in ry:
+        for x in rx:   
+            line+= "Out" + str(x + (y-1)*dimx) + ","
+    a(line)
+    #mesh_ports(a,dimx,"In","I")
+    #mesh_ports(a,dimx,"Out","O")
+    lines[-1] = lines[-1][:-2]+"\n" # remove comma
+
+    a('')
+    a('instances')
+    
+    baseline = ": Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)"
+    for y in ry:
+        for x in rx:
+            my_id, right, left, up, down = get_ids(x, y,dimx, dimy)
+               
+            a("F" + my_id + right + baseline)
+            a("F" + my_id + left + baseline)
+            a("F" + my_id + up + baseline)
+            a("F" + my_id + down + baseline)
+             
+    for y in ry:
+        for x in rx:
+            myid = str(x + (y-1) * dimx)
+            a("R" + myid +": Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)")
+    
+    a('channels')
+    for y in ry:
+        for x in rx:
+            myid = str(x + (y-1) * dimx)
+            a('{In'+myid+ ', R'+myid+'.In }')
+            a('{Out'+myid+ ', R'+myid+'.Out }')    
+    for y in ry:
+        for x in rx:
+            my_id, right, left, up, down = get_ids(x, y, dimx,dimy)
+            myf = "F" + my_id  + right 
+            if right[-1]=='x':
+                right = right[:-1]
+            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OXR" + '}')
+            a('{' +myf+ ".Out"+ ', ' + "R" + right + ".IXL" +'}')
+            myf = "F" + my_id  + left 
+            if left[-1]=='x':
+                left = left[:-1]
+            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OXL" + '}')
+            a('{' +myf+ ".Out"+ ', ' + "R" + left + ".IXR" +'}')
+
+            myf = "F" + my_id  + up 
+            if up[-1]=='x':
+                up = up[:-1]
+            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OYB" + '}')
+            a('{' +myf+ ".Out"+ ', ' + "R" + up + ".IYT" +'}') 
+            
+            myf = "F" + my_id  + down 
+            if down[-1]=='x':
+                down = down[:-1]
+
+            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OYT" + '}')
+            a('{' +myf+ ".Out"+ ', ' + "R" + down + ".IYB" +'}')  
+
+
+
+    f = open(dest,'w')
+    f.writelines(lines)
+    f.close()           
+
+def get_ids(x, y,dimx ,dimy):
+    my_id = str(x + (y-1)*dimx)
+    right = str(x+1 + (y-1)*dimx)
+    if x == dimx:
+        right = str(1+(y-1)*dimx) + "x"
+    up = str(x + y*dimx)
+    if y == dimy:
+        up = str(x) + "x"
+    left = str(x-1 + (y-1)*dimx)
+    if x == 1:
+        left = str(dimx + (y-1)*dimx) + "x"
+    down = str(x + (y-2)*dimx)
+    if y == 1:
+        down = str(x + (dimy-1) * dimx)+ "x"
+    return my_id, right, left, up, down
+
+cook_mesh(3,2,'output.poosl')
 #cook_copypasta('BasedNetworkSource.poosl','output.poosl',10)
 
 

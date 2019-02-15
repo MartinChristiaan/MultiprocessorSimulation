@@ -1,30 +1,38 @@
 import "Router.poosl"
 cluster class Meshnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
 ports
-In1,In2,In3,In4,
-IXL1,IXL3,
-IXR2,IXR4,
-IYB3,IYB4,
-IYT1,IYT2,
-Out1,Out2,Out3,Out4,
-OXL1,OXL3,
-OXR2,OXR4,
-OYB3,OYB4,
-OYT1,OYT2
+In1,In2,In3,In4,In5,In6,
+IXL1,IXL4,
+IXR3,IXR6,
+IYB4,IYB5,IYB6,
+IYT1,IYT2,IYT3,
+Out1,Out2,Out3,Out4,Out5,Out6,
+OXL1,OXL4,
+OXR3,OXR6,
+OYB4,OYB5,OYB6,
+OYT1,OYT2,OYT3
 
 instances
 F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F13: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F14: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F21: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F24: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F34: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F31: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F43: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F42: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F25: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F32: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F36: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F45: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F41: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F56: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F54: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F52: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F65: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F63: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 R1: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R2: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R3: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R4: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R5: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R6: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 channels
 {In1, R1.In }
 {Out1, R1.Out }
@@ -34,35 +42,55 @@ channels
 {Out3, R3.Out }
 {In4, R4.In }
 {Out4, R4.Out }
+{In5, R5.In }
+{Out5, R5.Out }
+{In6, R6.In }
+{Out6, R6.Out }
 {IXL1, R1.IXL}
 {IYT1, R1.IYT}
-{IXR2, R2.IXR}
 {IYT2, R2.IYT}
-{IXL3, R3.IXL}
-{IYB3, R3.IYB}
-{IXR4, R4.IXR}
+{IXR3, R3.IXR}
+{IYT3, R3.IYT}
+{IXL4, R4.IXL}
 {IYB4, R4.IYB}
+{IYB5, R5.IYB}
+{IXR6, R6.IXR}
+{IYB6, R6.IYB}
 {OXL1, R1.OXL}
 {OYT1, R1.OYT}
-{OXR2, R2.OXR}
 {OYT2, R2.OYT}
-{OXL3, R3.OXL}
-{OYB3, R3.OYB}
-{OXR4, R4.OXR}
+{OXR3, R3.OXR}
+{OYT3, R3.OYT}
+{OXL4, R4.OXL}
 {OYB4, R4.OYB}
+{OYB5, R5.OYB}
+{OXR6, R6.OXR}
+{OYB6, R6.OYB}
 {F12.In, R1.OXR}
 {F12.Out, R2.IXL}
-{F13.In, R1.OYB}
-{F13.Out, R3.IYT}
+{F14.In, R1.OYB}
+{F14.Out, R4.IYT}
+{F23.In, R2.OXR}
+{F23.Out, R3.IXL}
 {F21.In, R2.OXL}
 {F21.Out, R1.IXR}
-{F24.In, R2.OYB}
-{F24.Out, R4.IYT}
-{F34.In, R3.OXR}
-{F34.Out, R4.IXL}
-{F31.In, R3.OYT}
-{F31.Out, R1.IYB}
-{F43.In, R4.OXL}
-{F43.Out, R3.IXR}
-{F42.In, R4.OYT}
-{F42.Out, R2.IYB}
+{F25.In, R2.OYB}
+{F25.Out, R5.IYT}
+{F32.In, R3.OXL}
+{F32.Out, R2.IXR}
+{F36.In, R3.OYB}
+{F36.Out, R6.IYT}
+{F45.In, R4.OXR}
+{F45.Out, R5.IXL}
+{F41.In, R4.OYT}
+{F41.Out, R1.IYB}
+{F56.In, R5.OXR}
+{F56.Out, R6.IXL}
+{F54.In, R5.OXL}
+{F54.Out, R4.IXR}
+{F52.In, R5.OYT}
+{F52.Out, R2.IYB}
+{F65.In, R6.OXL}
+{F65.Out, R5.IXR}
+{F63.In, R6.OYT}
+{F63.Out, R3.IYB}

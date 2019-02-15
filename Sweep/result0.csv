@@ -1,0 +1,2 @@
+Latency Average,Latency Min,Latency Max,Sendrate Average,Sendrate Min,Sendrate Max,Interconnect,NumberOfNodes,Load Value,NIBufferCapacity
+0.0023372926617767596,0.0022446720043064,0.00244313525721715,267.64546577966274,255.52024661295,278.999314077133,Mesh,4.0,0.45,2.0

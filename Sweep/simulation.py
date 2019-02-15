@@ -38,7 +38,7 @@ def parse_results(nrNodes,output_directory):
 
 
 
-def simulate_bus(nrNodes,load_value,NIBufferCapacity,myid):
+def simulate_bus(nrNodes,load_value,NIBufferCapacity,myid=0):
     output_directory_template = 'Bus4/nrNodes_' + str(nrNodes) + "_load_" + str(load_value) + "_bufcap_" + str(NIBufferCapacity)
     model_path = os.getcwd()+'\\poosl_model'+str(myid)
     instances_path = model_path + "\\bus\\instances.poosl"
@@ -64,24 +64,35 @@ def simulate_bus(nrNodes,load_value,NIBufferCapacity,myid):
     output_directory = os.path.abspath(output_directory_template.format(load_value))
     return parse_results(nrNodes,output_directory)
 
-def simulate_mesh(nrNodes,load_value,NIBufferCapacity,myid):
+def get_dims(nrNodes):
+    if nrNodes == 4: return 2,2
+    if nrNodes == 6: return 3,2
+    if nrNodes == 8: return 4,2
+    if nrNodes == 9: return 3,3
+    if nrNodes == 12: return 4,3
+    if nrNodes == 16: return 4,4
+    if nrNodes == 20: return 5,4
+    if nrNodes == 25: return 5,5
+    raise ValueError('Nr Nodes not allowed')
+
+def simulate_mesh(nrNodes,load_value,NIBufferCapacity,myid=0):
     output_directory_template = 'mesh/nrNodes_' + str(nrNodes) + "_load_" + str(load_value) + "_bufcap_" + str(NIBufferCapacity)
     model_path = os.getcwd()+'\\poosl_model'+str(myid)
     instances_path = model_path + "\\mesh\\instances.poosl"
     network_path = model_path + "\\mesh\\MeshBasedNetwork.poosl"
     nrNodes = int(nrNodes)
-    dim = int(sqrt(nrNodes))
-    # Generate code for n nodes
+    dimx,dimy = get_dims(nrNodes)
+    #Generate code for n nodes
     copypastahero.cook_copypasta('sourcefiles\\MeshBasedNetwork.poosl',network_path,nrNodes)
     copypastahero.cook_copypasta('sourcefiles\\mesh_instances.poosl',instances_path,nrNodes)    
-    copypastahero.cook_mesh(dim,model_path + "\\mesh\\Meshnxn.poosl")
+    copypastahero.cook_mesh(dimx,dimy,model_path + "\\mesh\\Meshnxn.poosl")
 
     output_directory = os.path.abspath(output_directory_template)
     model_parameters = {'Load' : load_value, 
                         'NIBufferCapacity' : int(NIBufferCapacity),
                         'SoC_type' : 'Mesh_nxn',
-                        'NumberOfXNodes' : dim,
-                        'NumberOfYNodes' : dim
+                        'NumberOfXNodes' : dimx,
+                        'NumberOfYNodes' : dimy
                         }
     if run_network_model.run_network_model(
         [model_path], # library paths
@@ -92,10 +103,49 @@ def simulate_mesh(nrNodes,load_value,NIBufferCapacity,myid):
     output_directory = os.path.abspath(output_directory_template.format(load_value))
     return parse_results(nrNodes,output_directory)
 
+def simulate_torus(nrNodes,load_value,NIBufferCapacity,myid=0):
+    output_directory_template = 'torus/nrNodes_' + str(nrNodes) + "_load_" + str(load_value) + "_bufcap_" + str(NIBufferCapacity)
+    model_path = os.getcwd()+'\\poosl_model'+str(myid)
+    instances_path = model_path + "\\torus\\instances.poosl"
+    network_path = model_path + "\\torus\\TorusBasedNetwork.poosl"
+    nrNodes = int(nrNodes)
+    dimx,dimy = get_dims(nrNodes)
+    #Generate code for n nodes
+    copypastahero.cook_copypasta('sourcefiles\\TorusBasedNetwork.poosl',network_path,nrNodes)
+    copypastahero.cook_copypasta('sourcefiles\\torus_instances.poosl',instances_path,nrNodes)    
+    copypastahero.cook_torus(dimx,dimy,model_path + "\\torus\\Torusnxn.poosl")
+
+    output_directory = os.path.abspath(output_directory_template)
+    model_parameters = {'Load' : load_value, 
+                        'NIBufferCapacity' : int(NIBufferCapacity),
+                        'SoC_type' : 'Torus_nxn',
+                        'NumberOfXNodes' : dimx,
+                        'NumberOfYNodes' : dimy
+                        }
+    if run_network_model.run_network_model(
+        [model_path], # library paths
+        open('sourcefiles/torus_template.poosl').read(), # system instance template
+        nrNodes, model_parameters, output_directory) == False:
+            raise Exception("Model did not terminate to completion, check the output of Rotalumis!")
+    
+    output_directory = os.path.abspath(output_directory_template.format(load_value))
+    return parse_results(nrNodes,output_directory)
+
+
+def simulate(interconnect,nrNodes,load_value,NIBufferCapacity,myid=0):
+    if interconnect == "Bus":
+        return simulate_bus(nrNodes,load_value,NIBufferCapacity,myid)
+    if interconnect == "Mesh":
+        return simulate_mesh(nrNodes,load_value,NIBufferCapacity,myid)
+    if interconnect == "Torus":
+        return simulate_torus(nrNodes,load_value,NIBufferCapacity,myid)
+        
+    
+
 if __name__ == "__main__":
     config_df = pd.read_csv("config.csv")
     combi_config = get_all_combinations(config_df)
-    autosim_multiproc(simulate_mesh,combi_config,resultpath="results/Mesh/results.csv")
+    autosim(simulate,combi_config,resultpath="results/Mesh/results.csv")
 
 
 

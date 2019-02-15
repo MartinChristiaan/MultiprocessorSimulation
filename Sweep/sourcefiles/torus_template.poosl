@@ -1,0 +1,17 @@
+importlib "torus/instances.poosl"
+
+system
+instances
+	SoC: {params[SoC_type]}(
+		AccuracyCheckInterval := 1.0, 
+		FifoCapacity := {params[NIBufferCapacity]}, 
+		FifoProcessingTime := 0.00025, 
+		LinkCapacity := 600.0, 
+		Load := {params[Load]}, 
+		MeanBurstSize := 12.0, 
+		NIBufferCapacity := {params[NIBufferCapacity]}, 
+		NumberOfXNodes := {params[NumberOfXNodes]}, 
+		NumberOfYNodes := {params[NumberOfYNodes]}, 
+		RouterProcessingTime := 0.0006,
+		NITransferDelay := 0.0005)
+channels

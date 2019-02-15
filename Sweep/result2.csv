@@ -1,0 +1,2 @@
+Latency Average,Latency Min,Latency Max,Sendrate Average,Sendrate Min,Sendrate Max,Interconnect,NumberOfNodes,Load Value,NIBufferCapacity
+0.0023411644283853,0.0022395446925111,0.00252316791652197,272.248663629901,267.061986450843,277.788311241399,Torus,4.0,0.45,2.0

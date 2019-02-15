@@ -1,0 +1,40 @@
+import "../common/packet.poosl"
+
+data class Flit extends Object
+// Data class representing a flit
+
+variables
+	// In this model we assume a packet is transferred by a single flit, for modeling purposes only, the flit keeps a link to the packet data object
+	p: Packet,
+	// Destination for the flit, in specific topologies, it may be useful to create a sub class of class Flit in which
+	// more specific location / route dependent information is stored in a flit object				 
+	destination: Integer
+	
+methods
+
+	getDestination() : Integer
+	// getter method for the destination instance variable
+		return destination
+		
+		
+	printString : String
+	// create a textual representation of the flit object
+		return("(a flit for NI " + destination printString + ")")
+
+	setDestination(d: Integer) : Flit
+	// set the destination in terms that makes sense for the network topology
+	// for this general template we will just use the node ID, but for a different topology
+	// you may want to add additional information about the destination location or route
+		destination := d;
+		return self
+
+	getPacket() : Packet
+	// getter method for the packet instance variable
+		return p
+
+	setPacket(q: Packet) : Flit
+	// setter method for the packet instance variable
+	// in addition, automatically copy the destination information from the packet to the flit
+		p := q;
+		self setDestination( q getDestination());
+		return self

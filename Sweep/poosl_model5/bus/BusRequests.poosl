@@ -1,0 +1,42 @@
+data class BusRequests extends Array
+// representation of a set of bus requests
+// the index into the array represents the ID of the requester
+// the value is true if the requester has an active request
+
+variables
+
+methods
+	add(n: Integer) : BusRequests
+	// add a request for requester n
+		self putAt(n,true);
+		return self
+	
+	check(n: Integer) : Boolean
+	// check if there is a request for requester n
+		return self at(n)
+
+	clear(n: Integer) : BusRequests
+	// clear the request for requester n (if any)
+		self putAt(n,false);
+		return self
+	
+	getSize() : Integer
+	// get the number or requesters
+		return self size
+
+	init(n: Integer) : BusRequests
+	// initialise the data structure for n requesters
+		// make the array the right size
+		self resize(n) putAll(false);
+		return self
+
+	notIdle() : Boolean
+	// check if there are any active requesters 
+	|i: Integer, RequestAvailable: Boolean|
+		// walk through the array
+		i :=1; RequestAvailable := false;
+		while (RequestAvailable not) & (i <= self size) do
+			RequestAvailable := self at(i);
+			i:=i+1
+		od;
+		return RequestAvailable

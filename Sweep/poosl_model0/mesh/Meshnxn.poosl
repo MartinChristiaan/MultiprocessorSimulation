@@ -1,30 +1,46 @@
 import "Router.poosl"
 cluster class Meshnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
 ports
-In1,In2,In3,In4,
-IXL1,IXL3,
-IXR2,IXR4,
-IYB3,IYB4,
-IYT1,IYT2,
-Out1,Out2,Out3,Out4,
-OXL1,OXL3,
-OXR2,OXR4,
-OYB3,OYB4,
-OYT1,OYT2
+In1,In2,In3,In4,In5,In6,In7,In8,
+IXL1,IXL5,
+IXR4,IXR8,
+IYB5,IYB6,IYB7,IYB8,
+IYT1,IYT2,IYT3,IYT4,
+Out1,Out2,Out3,Out4,Out5,Out6,Out7,Out8,
+OXL1,OXL5,
+OXR4,OXR8,
+OYB5,OYB6,OYB7,OYB8,
+OYT1,OYT2,OYT3,OYT4
 
 instances
 F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F13: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F15: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F21: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F24: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F26: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F34: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F31: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F32: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F37: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F43: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F42: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F48: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F56: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F51: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F67: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F65: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F62: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F78: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F76: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F73: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F87: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F84: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 R1: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R2: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R3: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R4: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R5: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R6: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R7: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R8: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 channels
 {In1, R1.In }
 {Out1, R1.Out }
@@ -34,35 +50,75 @@ channels
 {Out3, R3.Out }
 {In4, R4.In }
 {Out4, R4.Out }
+{In5, R5.In }
+{Out5, R5.Out }
+{In6, R6.In }
+{Out6, R6.Out }
+{In7, R7.In }
+{Out7, R7.Out }
+{In8, R8.In }
+{Out8, R8.Out }
 {IXL1, R1.IXL}
 {IYT1, R1.IYT}
-{IXR2, R2.IXR}
 {IYT2, R2.IYT}
-{IXL3, R3.IXL}
-{IYB3, R3.IYB}
+{IYT3, R3.IYT}
 {IXR4, R4.IXR}
-{IYB4, R4.IYB}
+{IYT4, R4.IYT}
+{IXL5, R5.IXL}
+{IYB5, R5.IYB}
+{IYB6, R6.IYB}
+{IYB7, R7.IYB}
+{IXR8, R8.IXR}
+{IYB8, R8.IYB}
 {OXL1, R1.OXL}
 {OYT1, R1.OYT}
-{OXR2, R2.OXR}
 {OYT2, R2.OYT}
-{OXL3, R3.OXL}
-{OYB3, R3.OYB}
+{OYT3, R3.OYT}
 {OXR4, R4.OXR}
-{OYB4, R4.OYB}
+{OYT4, R4.OYT}
+{OXL5, R5.OXL}
+{OYB5, R5.OYB}
+{OYB6, R6.OYB}
+{OYB7, R7.OYB}
+{OXR8, R8.OXR}
+{OYB8, R8.OYB}
 {F12.In, R1.OXR}
 {F12.Out, R2.IXL}
-{F13.In, R1.OYB}
-{F13.Out, R3.IYT}
+{F15.In, R1.OYB}
+{F15.Out, R5.IYT}
+{F23.In, R2.OXR}
+{F23.Out, R3.IXL}
 {F21.In, R2.OXL}
 {F21.Out, R1.IXR}
-{F24.In, R2.OYB}
-{F24.Out, R4.IYT}
+{F26.In, R2.OYB}
+{F26.Out, R6.IYT}
 {F34.In, R3.OXR}
 {F34.Out, R4.IXL}
-{F31.In, R3.OYT}
-{F31.Out, R1.IYB}
+{F32.In, R3.OXL}
+{F32.Out, R2.IXR}
+{F37.In, R3.OYB}
+{F37.Out, R7.IYT}
 {F43.In, R4.OXL}
 {F43.Out, R3.IXR}
-{F42.In, R4.OYT}
-{F42.Out, R2.IYB}
+{F48.In, R4.OYB}
+{F48.Out, R8.IYT}
+{F56.In, R5.OXR}
+{F56.Out, R6.IXL}
+{F51.In, R5.OYT}
+{F51.Out, R1.IYB}
+{F67.In, R6.OXR}
+{F67.Out, R7.IXL}
+{F65.In, R6.OXL}
+{F65.Out, R5.IXR}
+{F62.In, R6.OYT}
+{F62.Out, R2.IYB}
+{F78.In, R7.OXR}
+{F78.Out, R8.IXL}
+{F76.In, R7.OXL}
+{F76.Out, R6.IXR}
+{F73.In, R7.OYT}
+{F73.Out, R3.IYB}
+{F87.In, R8.OXL}
+{F87.Out, R7.IXR}
+{F84.In, R8.OYT}
+{F84.Out, R4.IYB}
