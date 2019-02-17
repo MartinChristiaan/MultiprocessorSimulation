@@ -19,7 +19,7 @@ init
 
 methods
 
-	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,altdist : Integer,absdx : Integer,dyabs : Integer,dy2abs : Integer|
+	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,dxabs : Integer,dx2abs : Integer,dyabs : Integer,dy2abs : Integer|
 	// override the method to create MseshFlits with routing information 
 	
 		/* Forwards a packet in the buffer as a flit to the router using relative destination coordinates */
@@ -30,16 +30,37 @@ methods
 		coord := Locator getCoordinatesOf(p getDestination) minus(Locator getCoordinatesOf(MyID));
 		dx := coord getX();
 		dy := coord getY();
-		absdx := dx;
-		if absdx<0 then
-		absdx := -absdx
+		
+		if dx < 0 then
+			dxabs := -dx
+		else
+			dxabs := dx
 		fi;
-		altdist := NumberOfXNodes - absdx;
-		if altdist < absdx then
-			if dx < 0 then
-				altdist := -altdist
-			fi;
-			dx := altdist			
+		
+		if dx-NumberOfXNodes < 0  then
+			dx2abs := -(dx-NumberOfXNodes)
+		else
+			dx2abs := (dx-NumberOfXNodes)
+		fi;				
+		if dx2abs <= dxabs then
+			//if rand random() < 2.0 then
+			dx:= dx-NumberOfXNodes
+			//fi
+		fi;				
+		// Same for dy
+		if dy < 0 then
+			dyabs := -dy
+		else
+			dyabs := dy
+		fi;
+		if dy-NumberOfYNodes < 0 then
+			dy2abs := -(dy-NumberOfYNodes)
+		else
+			dy2abs := (dy-NumberOfYNodes)
+		fi;				
+		
+		if dy2abs <= dyabs then
+			dy:= dy-NumberOfYNodes
 		fi;
 		
 		coord := new(XYCoords) init(dx, dy); 

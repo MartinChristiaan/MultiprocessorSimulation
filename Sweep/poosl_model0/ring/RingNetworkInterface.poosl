@@ -1,8 +1,8 @@
-import "TorusFlit.poosl"
+import "RingFlit.poosl"
 import "../common/NetworkInterface.poosl"
 import "nodecoordination.poosl"
 
-process class TorusNetworkInterface (NumberOfXNodes: Integer, NumberOfYNodes: Integer)
+process class RingNetworkInterface (NumberOfXNodes: Integer, NumberOfYNodes: Integer)
 extends NetworkInterface
 
 ports
@@ -15,11 +15,11 @@ variables
 	Locator: NodeMap
 	rand : RandomGenerator
 init
-	InitialiseTorus()()
+	InitialiseRing()()
 
 methods
 
-	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,altdist : Integer,absdx : Integer,dyabs : Integer,dy2abs : Integer|
+	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,dxabs : Integer,dx2abs : Integer,dyabs : Integer,dy2abs : Integer|
 	// override the method to create MseshFlits with routing information 
 	
 		/* Forwards a packet in the buffer as a flit to the router using relative destination coordinates */
@@ -27,30 +27,18 @@ methods
 		[InputBuffer isEmpty not] p := InputBuffer inspect;
 		// For a torus this should be different here destination should be 
 		//argmin(abs(dx - x), abs(dimx - dx - x))
-		coord := Locator getCoordinatesOf(p getDestination) minus(Locator getCoordinatesOf(MyID));
-		dx := coord getX();
-		dy := coord getY();
-		absdx := dx;
-		if absdx<0 then
-		absdx := -absdx
-		fi;
-		altdist := NumberOfXNodes - absdx;
-		if altdist < absdx then
-			if dx < 0 then
-				altdist := -altdist
-			fi;
-			dx := altdist			
-		fi;
 		
-		coord := new(XYCoords) init(dx, dy); 
+		//dy:= dy-NumberOfYNodes;
+		
+		coord := new(XYCoords) init(1, 0); 
 		coord printString();			
-		f := new(TorusFlit) setPacket(p) setDestinationCoordinates(coord);
+		f := new(RingFlit) setPacket(p) setDestinationCoordinates(coord);
 		Network!Flit(f);
 		InputBuffer remove;
 		ForwardToNetwork()()
 		
 	// additional initialisation compared to the super class
-	InitialiseTorus()()
+	InitialiseRing()()
 		Locator := new(NodeMap) init(NumberOfXNodes, NumberOfYNodes);
 		rand := new(RandomGenerator) randomiseSeed;
 		Initialise()()

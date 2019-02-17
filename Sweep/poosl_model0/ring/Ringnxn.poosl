@@ -1,0 +1,38 @@
+import "Router.poosl"
+cluster class Ringnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
+ports
+In1,In2,In3,
+Out1,Out2,Out3
+
+instances
+F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F31x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+
+R1: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R2: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R3: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+
+channels
+{In1, R1.In }
+{Out1, R1.Out }
+{In2, R2.In }
+{Out2, R2.Out }
+{In3, R3.In }
+{Out3, R3.Out }
+
+
+{F12.In, R1.OXR}
+{F12.Out, R2.IXL}
+
+{F23.In, R2.OXR}
+{F23.Out, R3.IXL}
+
+{F31x.In, R3.OXR}
+{F31x.Out, R1.IXL}
+
+//{F21.In, R1.IXR}
+//{F21.Out, R2.OXL}
+
+//{F12x.In, R1.OXL}
+//{F12x.Out, R2.IXR}
