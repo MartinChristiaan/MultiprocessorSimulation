@@ -13,9 +13,10 @@ messages
 variables
 	
 init
-	TransferFlit()()
+	MyInit()()
+	
 methods
-	TransferFlit()() |f: Flit, fx : Integer|
+	TransferFlit1()() |f: Flit, fx : Integer|
 		
 		/* Receives and forwards a flit for the positive direction */
 		
@@ -23,18 +24,31 @@ methods
 			In?Flit(f)
 		or
 			IXL1?Flit(f)
-		or
-			IXL2?Flit(f)
 		les;
 		delay(ProcessingTime);
 		fx := f getXCoordinate(); 
 		if  fx- Xpos == 0 then
 			Out!Flit(f)
-		else if fx -Xpos == NumberOfXNodes then
-			Out!Flit(f)
-		else if fx - Xpos > NumberOfXNodes then
-			OXR2!Flit(f)			
 		else 
 			OXR1!Flit(f)
-		fi fi fi;		
-		TransferFlit()()
+		fi;		
+		TransferFlit1()()
+	
+	TransferFlit2()() |f: Flit, fx : Integer|
+		IXL2?Flit(f);
+		delay(ProcessingTime);
+		fx := f getXCoordinate(); 
+		if fx -Xpos == NumberOfXNodes then
+			Out!Flit(f)
+		else
+ 			OXR2!Flit(f)			
+		fi;		
+		TransferFlit2()()
+	MyInit()()
+		par
+			TransferFlit1()()
+		and
+			TransferFlit2()()
+		rap
+		
+		

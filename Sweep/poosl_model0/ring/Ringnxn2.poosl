@@ -1,0 +1,50 @@
+import "Router.poosl"
+import "TDMFifo.poosl"
+cluster class Ringnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
+ports
+In1,In2,In3,
+Out1,Out2,Out3
+
+instances
+F12: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F23: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F31: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+
+
+R14: Router (ProcessingTime:= RouterProcessingTime,Xpos := 1,NumberOfXNodes:= 3)
+R25: Router (ProcessingTime:= RouterProcessingTime,Xpos := 2,NumberOfXNodes:= 3)
+R36: Router (ProcessingTime:= RouterProcessingTime,Xpos := 3,NumberOfXNodes:= 3)
+
+channels
+{In1, R14.In }
+{Out1, R14.Out }
+{In2, R25.In }
+{Out2, R25.Out }
+{In3, R36.In }
+{Out3, R36.Out }
+
+
+{F12.In1, R14.OXR1}
+{F12.Out1, R25.IXL1}
+
+{F23.In1, R25.OXR1}
+{F23.Out1, R36.IXL1}
+
+{F31.In1, R36.OXR1}
+{F31.Out1, R14.IXL2}
+
+{F12.In2, R14.OXR2}
+{F12.Out2, R25.IXL2}
+
+{F23.In2, R25.OXR2}
+{F23.Out2, R36.IXL2}
+
+// Never used
+{F31.In2,R36.OXR2}
+{F31.Out2,R14.IXL1}
+
+
+
+
+
+

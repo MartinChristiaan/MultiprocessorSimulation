@@ -19,8 +19,8 @@ messages
 variables
 	Buffer1: Queue
 	Buffer2: Queue
-	InputProcessing : Boolean
-	OutputProcessing : Boolean
+	Buffer1sTurn : Boolean
+	Buffer2sTurn : Boolean
 
 init
 	Initialise()()
@@ -29,44 +29,46 @@ methods
 			
 	
 	HandleInput1()() |f: Flit|
-		[Buffer1 isFull not ][InputProcessing not] In1?Flit(f){Buffer1 add(f)};
- 		InputProcessing := true;
-		delay(ProcessingTime);
-		InputProcessing := false;		
+		[Buffer1 isFull not ][Buffer1sTurn] In1?Flit(f){Buffer1 add(f)};
+ 		delay(ProcessingTime);
 		HandleInput1()()
+		
 	HandleInput2()() |f: Flit|
-		[Buffer2 isFull not ][InputProcessing not] In2?Flit(f){Buffer2 add(f)};
- 		InputProcessing := true;
-		delay(ProcessingTime);
-		InputProcessing := false;		
-		HandleInput1()()
+		[Buffer2 isFull not ][Buffer2sTurn] In2?Flit(f){Buffer2 add(f)};
+ 		delay(ProcessingTime);
+		HandleInput2()()
 	
 	HandleOutput1()() |f: Flit|
-		[Buffer1 isEmpty not][OutputProcessing not] f := Buffer1 inspect;
-		
+		[Buffer1 isEmpty not][Buffer1sTurn] f := Buffer1 inspect;
 		Out1!Flit(f);
-		OutputProcessing := true;
 		delay(ProcessingTime);
-		OutputProcessing := false;
 		Buffer1 remove;
 		HandleOutput1()()
+
 	HandleOutput2()() |f: Flit|
-		[Buffer2 isEmpty not][OutputProcessing not] f := Buffer2 inspect;
-		
+		[Buffer2 isEmpty not][Buffer2sTurn] f := Buffer2 inspect;
 		Out2!Flit(f);
-		OutputProcessing := true;
 		delay(ProcessingTime);
-		OutputProcessing := false;
 		Buffer2 remove;
 		HandleOutput2()()
+	ManageTurns()()
+		Buffer1sTurn := true;
+		delay(ProcessingTime*10.0);
+		Buffer1sTurn := false;
+		delay(ProcessingTime);
+		Buffer2sTurn := true;
+		delay(ProcessingTime*10.0);
+		Buffer2sTurn := false;
+		delay(ProcessingTime);
+		ManageTurns()()
 	
 	Initialise()()
 	// Initialisation method
 		// Create the data object that will hold the flits in a Fifo queue manner and set its capacity 
 		Buffer1 := new(Queue) resize(Capacity);
 		Buffer2 := new(Queue) resize(Capacity);
-		InputProcessing := false;
-		OutputProcessing := false;
+		Buffer1sTurn := false;
+		Buffer2sTurn := false;
 		// concurrently start handling input and output. These method calls will never terminate.
 		par
 			HandleInput1()()
@@ -76,4 +78,6 @@ methods
 			HandleInput2()()
 		and
 			HandleOutput2()()
+		and 
+			ManageTurns()()
 		rap
