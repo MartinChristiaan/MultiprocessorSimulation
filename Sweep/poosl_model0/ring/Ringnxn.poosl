@@ -1,45 +1,50 @@
 import "Router.poosl"
+import "TDMFifo.poosl"
 cluster class Ringnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
 ports
 In1,In2,In3,
 Out1,Out2,Out3
 
 instances
-F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F31x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F12: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F23: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F31: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 
-F21: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F32: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F13x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 
-R1: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
-R2: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
-R3: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R14: Router (ProcessingTime:= RouterProcessingTime,Xpos := 1,NumberOfXNodes:= 3)
+R25: Router (ProcessingTime:= RouterProcessingTime,Xpos := 2,NumberOfXNodes:= 3)
+R36: Router (ProcessingTime:= RouterProcessingTime,Xpos := 3,NumberOfXNodes:= 3)
 
 channels
-{In1, R1.In }
-{Out1, R1.Out }
-{In2, R2.In }
-{Out2, R2.Out }
-{In3, R3.In }
-{Out3, R3.Out }
+{In1, R14.In }
+{Out1, R14.Out }
+{In2, R25.In }
+{Out2, R25.Out }
+{In3, R36.In }
+{Out3, R36.Out }
 
 
-{F12.In, R1.OXR}
-{F12.Out, R2.IXL}
+{F12.In1, R14.OXR1}
+{F12.Out1, R25.IXL1}
 
-{F23.In, R2.OXR}
-{F23.Out, R3.IXL}
+{F23.In1, R25.OXR1}
+{F23.Out1, R36.IXL1}
 
-{F31x.In, R3.OXR}
-{F31x.Out, R1.IXL}
+{F31.In1, R36.OXR1}
+{F31.Out1, R14.IXL2}
 
-{F21.In, R2.OXL}
-{F21.Out, R1.IXR}
+{F12.In2, R14.OXR2}
+{F12.Out2, R25.IXL2}
 
-{F32.In, R3.OXL}
-{F32.Out, R2.IXR}
+{F23.In2, R25.OXR2}
+{F23.Out2, R36.IXL2}
 
-{F13x.In, R1.OXL}
-{F13x.Out, R3.IXR}
+// Never used
+{F31.In2,R36.OXR2}
+{F31.Out2,R14.IXL1}
+
+
+
+
+
+

@@ -2,7 +2,7 @@ import "RingFlit.poosl"
 import "../common/NetworkInterface.poosl"
 import "nodecoordination.poosl"
 
-process class RingNetworkInterface (NumberOfXNodes: Integer, NumberOfYNodes: Integer)
+process class RingNetworkInterface (NumberOfXNodes: Integer)
 extends NetworkInterface
 
 ports
@@ -19,7 +19,7 @@ init
 
 methods
 
-	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,absdx : Integer,altdist : Integer,dyabs : Integer,dy2abs : Integer|
+	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,Xdest : Integer,Xsource : Integer,dyabs : Integer,dy2abs : Integer|
 	// override the method to create MseshFlits with routing information 
 	
 		/* Forwards a packet in the buffer as a flit to the router using relative destination coordinates */
@@ -29,22 +29,14 @@ methods
 		//argmin(abs(dx - x), abs(dimx - dx - x))
 		
 		//dy:= dy-NumberOfYNodes;
-		coord := Locator getCoordinatesOf(p getDestination) minus(Locator getCoordinatesOf(MyID));
-		dx := coord getX();
-		dy := coord getY();
-		absdx := dx;
-		if absdx<0 then
-		absdx := -absdx
-		fi;
-		altdist := NumberOfXNodes - absdx;
-		if altdist < absdx then
-			if dx < 0 then
-				altdist := -altdist
-			fi;
-			dx := altdist			
-		fi;
-		
-		coord := new(XYCoords) init(2, dy); 
+		Xdest := Locator getCoordinatesOf(p getDestination) getX() ;
+		Xsource := Locator getCoordinatesOf(MyID) getX();
+		if Xdest<Xsource then
+		Xdest:=Xdest+NumberOfXNodes
+		fi;		 
+				
+//				
+		coord := new(XYCoords) init(Xdest, 0); 
 	
 		f := new(RingFlit) setPacket(p) setDestinationCoordinates(coord);
 		Network!Flit(f);
@@ -53,7 +45,7 @@ methods
 		
 	// additional initialisation compared to the super class
 	InitialiseRing()()
-		Locator := new(NodeMap) init(NumberOfXNodes, NumberOfYNodes);
+		Locator := new(NodeMap) init(NumberOfXNodes, 1);
 		rand := new(RandomGenerator) randomiseSeed;
 		Initialise()()
 	

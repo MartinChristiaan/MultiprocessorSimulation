@@ -1,26 +1,40 @@
+import "RingFlit.poosl"
 import "../common/Fifo.poosl"
-import "NegativeRouter.poosl"
-import "PositiveRouter.poosl"
-
-cluster class Router (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
+process class Router (ProcessingTime: Real,Xpos : Integer,NumberOfXNodes: Integer)
 ports
-	In,Out, OXR, IXL , OXL,IXR
-instances
-	FiFo: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-	NegativeRouter: NegativeRouter(ProcessingTime := RouterProcessingTime)
-	PositiveRouter: PositiveRouter(ProcessingTime := RouterProcessingTime)
-channels
-	{FiFo.In,  PositiveRouter.Out } 
-	{FiFo.Out, NegativeRouter.In } 
+	In, IXL1,IXL2, Out, OXR1,OXR2
+messages
+	In?Flit(RingFlit),
+	IXL1?Flit(RingFlit),
+	IXL2?Flit(RingFlit),	
+	Out!Flit(RingFlit),
+	OXR1!Flit(RingFlit),
+	OXR2!Flit(RingFlit)
+variables
 	
-	{In, PositiveRouter.In } 
-	{Out, NegativeRouter.Out } 
-
-	{IXL, PositiveRouter.IXL } 
-	{OXR, PositiveRouter.OXR } 
-
-	{OXL, NegativeRouter.OXL } 
-	{IXR, NegativeRouter.IXR } 
-
-	
-	//{IXR, NegativeRouter.IXR } 
+init
+	TransferFlit()()
+methods
+	TransferFlit()() |f: Flit, fx : Integer|
+		
+		/* Receives and forwards a flit for the positive direction */
+		
+		sel
+			In?Flit(f)
+		or
+			IXL1?Flit(f)
+		or
+			IXL2?Flit(f)
+		les;
+		delay(ProcessingTime);
+		fx := f getXCoordinate(); 
+		if  fx- Xpos == 0 then
+			Out!Flit(f)
+		else if fx -Xpos == NumberOfXNodes then
+			Out!Flit(f)
+		else if fx - Xpos > NumberOfXNodes then
+			OXR2!Flit(f)			
+		else 
+			OXR1!Flit(f)
+		fi fi fi;		
+		TransferFlit()()
