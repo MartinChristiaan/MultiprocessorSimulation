@@ -131,6 +131,33 @@ def simulate_torus(nrNodes,load_value,NIBufferCapacity,myid=0):
     output_directory = os.path.abspath(output_directory_template.format(load_value))
     return parse_results(nrNodes,output_directory)
 
+def simulate_ring(nrNodes,load_value,NIBufferCapacity,myid=0):
+    output_directory_template = 'ring/nrNodes_' + str(nrNodes) + "_load_" + str(load_value) + "_bufcap_" + str(NIBufferCapacity)
+    model_path = os.getcwd()+'\\poosl_model'+str(myid)
+    instances_path = model_path + "\\ring\\instances.poosl"
+    network_path = model_path + "\\ring\\RingBasedNetwork.poosl"
+    nrNodes = int(nrNodes)
+    #Generate code for n nodes
+    copypastahero.cook_copypasta('sourcefiles\\RingBasedNetwork.poosl',network_path,nrNodes)
+    copypastahero.cook_copypasta('sourcefiles\\ring_instances.poosl',instances_path,nrNodes)    
+    copypastahero.cook_ring(nrNodes,model_path + "\\ring\\Ringnxn.poosl")
+
+    output_directory = os.path.abspath(output_directory_template)
+    model_parameters = {'Load' : load_value, 
+                        'NIBufferCapacity' : int(NIBufferCapacity),
+                        'SoC_type' : 'Ring',
+                        'NumberOfXNodes' : nrNodes,
+                        'NumberOfYNodes' : 1
+                        }
+    if run_network_model.run_network_model(
+        [model_path], # library paths
+        open('sourcefiles/ring_template.poosl').read(), # system instance template
+        nrNodes, model_parameters, output_directory) == False:
+            raise Exception("Model did not terminate to completion, check the output of Rotalumis!")
+    
+    output_directory = os.path.abspath(output_directory_template.format(load_value))
+    return parse_results(nrNodes,output_directory)
+
 
 def simulate(interconnect,nrNodes,load_value,NIBufferCapacity,myid=0):
     if interconnect == "Bus":
@@ -139,6 +166,8 @@ def simulate(interconnect,nrNodes,load_value,NIBufferCapacity,myid=0):
         return simulate_mesh(nrNodes,load_value,NIBufferCapacity,myid)
     if interconnect == "Torus":
         return simulate_torus(nrNodes,load_value,NIBufferCapacity,myid)
+    if interconnect == "Ring":
+        return simulate_ring(nrNodes,load_value,NIBufferCapacity,myid)
         
     
 

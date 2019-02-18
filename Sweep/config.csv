@@ -1,2 +1,2 @@
 Interconnect,NumberOfNodes,Load Value,NIBufferCapacity
-Torus,6,0.45,2
+Ring,3,0.45,2

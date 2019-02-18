@@ -8,7 +8,7 @@ ports
 instances
 	N1: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 1, NumberOfNodes := 2)
 	N2: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 2, NumberOfNodes := 2)
-	N3: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 2, NumberOfNodes := 2)
+	N3: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 3, NumberOfNodes := 3)
 
 RingNetwork: RingBasedNetwork(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, NIBufferCapacity := NIBufferCapacity,
 NumberOfXNodes := NumberOfXNodes, NumberOfYNodes := 1, RouterProcessingTime := RouterProcessingTime, TransferDelay := NITransferDelay)
@@ -16,4 +16,4 @@ channels
 	{N1.NI, RingNetwork.Node1 } 
 	{N2.NI, RingNetwork.Node2 } 
 	{N3.NI, RingNetwork.Node3 } 
-	
+

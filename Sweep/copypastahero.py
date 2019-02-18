@@ -290,8 +290,86 @@ def get_ids(x, y,dimx ,dimy):
         down = str(x + (dimy-1) * dimx)+ "x"
     return my_id, right, left, up, down
 
-cook_mesh(3,2,'output.poosl')
+
+#cook_mesh(3,2,'output.poosl')
 #cook_copypasta('BasedNetworkSource.poosl','output.poosl',10)
 
+def cook_ring(dim,dest):
+   
+    lines = []
+    a = lambda line:lines.append(line + "\n")
+    a('import "Router.poosl"')
+    a('import "TDMRouter.poosl"')
+    a('import "TDMFifo.poosl"')
+    a('cluster class Ringnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)')  
+    a('ports')
+    r = range(1,dim+1)
 
+    
+    line = ""
+    for x in r:   
+       line+= "In" + str(x) + ","
+    a(line)
+    line = ""
+    for x in r:   
+        line+= "Out" + str(x) + ","
+    a(line)
+    a('IXL1_start,')
+    a('OXR2_stop')
 
+    a('')
+    a('instances')
+    
+    baseline1 = ": Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)"
+    baseline2 = ": TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)"
+    
+    for x in r:
+        my_id = str(x)
+        right = str(x+1)
+        if x == dim:
+            right = str(1)
+        if x < dim - 1 :   
+            a("F" + my_id + right + baseline2)
+        else:
+            a("F" + my_id + right + baseline1)
+    for x in r:
+        myid = str(x)
+        if x == dim:
+            a("R" + myid +": Router (ProcessingTime:= RouterProcessingTime,Xpos := "+ str(x)+ ",NumberOfXNodes:= "+str(dim)+")")
+        else:
+            a("R" + myid +": TDMRouter (ProcessingTime:= RouterProcessingTime,Xpos := "+ str(x)+ ",NumberOfXNodes:= "+str(dim)+")")
+    
+    a('channels')
+    for x in r:
+        myid = str(x)
+        a('{In'+myid+ ', R'+myid+'.In }')
+        a('{Out'+myid+ ', R'+myid+'.Out }')    
+    
+    for x in r:
+        my_id = str(x)
+        right = str(x+1)
+        if x == dim:
+            right = str(1)
+
+        if x == 1:
+            a("{IXL1_start,R" + str(x) + ".IXL1}")
+
+        if x < dim - 1 :   
+            a("{F" + my_id + right + ".In1, R"+my_id + ".OXR1" + "}")
+            a("{F" + my_id + right + ".In2, R"+my_id + ".OXR2" + "}")
+            a("{F" + my_id + right + ".Out1, R"+right + ".IXL1" + "}")
+            a("{F" + my_id + right + ".Out2, R"+right + ".IXL2" + "}")
+        elif x == dim-1:
+            a("{F" + my_id + right + ".In, R"+my_id + ".OXR1" + "}")
+            a("{F" + my_id + right + ".Out, R"+right + ".IXL1" + "}")
+            a("{OXR2_stop,R" +str(x) + ".OXR2}")
+        elif x == dim:
+            a("{F" + my_id + right + ".In, R"+my_id + ".OXR1" + "}")
+            a("{F" + my_id + right + ".Out, R"+right + ".IXL2" + "}")
+    
+
+    f = open(dest,'w')
+    f.writelines(lines)
+    f.close()           
+
+cook_ring(3,"output.poosl")

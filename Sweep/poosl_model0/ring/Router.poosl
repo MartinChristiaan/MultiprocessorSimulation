@@ -2,24 +2,20 @@ import "RingFlit.poosl"
 import "../common/Fifo.poosl"
 process class Router (ProcessingTime: Real,Xpos : Integer,NumberOfXNodes: Integer)
 ports
-	In, IXL1,IXL2, Out, OXR1,OXR2
+	In, IXL1, Out, OXR1
 messages
 	In?Flit(RingFlit),
 	IXL1?Flit(RingFlit),
-	IXL2?Flit(RingFlit),	
 	Out!Flit(RingFlit),
 	OXR1!Flit(RingFlit),
-	OXR2!Flit(RingFlit)
 variables
 	
 init
-	MyInit()()
-	
+	TransferFlit()()
 methods
-	TransferFlit1()() |f: Flit, fx : Integer|
+	TransferFlit()() |f: Flit, fx : Integer|
 		
 		/* Receives and forwards a flit for the positive direction */
-		
 		sel
 			In?Flit(f)
 		or
@@ -32,23 +28,8 @@ methods
 		else 
 			OXR1!Flit(f)
 		fi;		
-		TransferFlit1()()
+		TransferFlit()()
 	
-	TransferFlit2()() |f: Flit, fx : Integer|
-		IXL2?Flit(f);
-		delay(ProcessingTime);
-		fx := f getXCoordinate(); 
-		if fx -Xpos == NumberOfXNodes then
-			Out!Flit(f)
-		else
- 			OXR2!Flit(f)			
-		fi;		
-		TransferFlit2()()
-	MyInit()()
-		par
-			TransferFlit1()()
-		and
-			TransferFlit2()()
-		rap
+	
 		
 		
