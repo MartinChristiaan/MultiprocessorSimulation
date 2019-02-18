@@ -4,19 +4,23 @@ import "PositiveRouter.poosl"
 
 cluster class Router (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
 ports
-	In,Out, OXR, IXL
+	In,Out, OXR, IXL , OXL,IXR
 instances
-	//FiFo: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-	//NegativeRouter: NegativeRouter(ProcessingTime := RouterProcessingTime)
+	FiFo: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+	NegativeRouter: NegativeRouter(ProcessingTime := RouterProcessingTime)
 	PositiveRouter: PositiveRouter(ProcessingTime := RouterProcessingTime)
 channels
-	//{FiFo.In, PositiveRouter.Out } 
-	//{FiFo.Out, NegativeRouter.In } 
-	//{FiFo.Out, PositiveRouter.In } 
+	{FiFo.In,  PositiveRouter.Out } 
+	{FiFo.Out, NegativeRouter.In } 
 	
 	{In, PositiveRouter.In } 
-	{Out, PositiveRouter.Out } 
+	{Out, NegativeRouter.Out } 
+
 	{IXL, PositiveRouter.IXL } 
 	{OXR, PositiveRouter.OXR } 
+
+	{OXL, NegativeRouter.OXL } 
+	{IXR, NegativeRouter.IXR } 
+
 	
 	//{IXR, NegativeRouter.IXR } 

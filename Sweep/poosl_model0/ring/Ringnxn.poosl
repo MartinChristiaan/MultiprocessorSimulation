@@ -9,6 +9,10 @@ F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F31x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 
+F21: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F32: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F13x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+
 R1: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R2: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 R3: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
@@ -31,8 +35,11 @@ channels
 {F31x.In, R3.OXR}
 {F31x.Out, R1.IXL}
 
-//{F21.In, R1.IXR}
-//{F21.Out, R2.OXL}
+{F21.In, R2.OXL}
+{F21.Out, R1.IXR}
 
-//{F12x.In, R1.OXL}
-//{F12x.Out, R2.IXR}
+{F32.In, R3.OXL}
+{F32.Out, R2.IXR}
+
+{F13x.In, R1.OXL}
+{F13x.Out, R3.IXR}

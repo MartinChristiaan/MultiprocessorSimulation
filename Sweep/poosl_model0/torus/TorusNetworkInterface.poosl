@@ -42,7 +42,7 @@ methods
 			dx := altdist			
 		fi;
 		
-		coord := new(XYCoords) init(dx, dy); 
+		coord := new(XYCoords) init(2, dy); 
 		coord printString();			
 		f := new(TorusFlit) setPacket(p) setDestinationCoordinates(coord);
 		Network!Flit(f);

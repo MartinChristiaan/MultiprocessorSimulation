@@ -19,7 +19,7 @@ init
 
 methods
 
-	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,dxabs : Integer,dx2abs : Integer,dyabs : Integer,dy2abs : Integer|
+	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,absdx : Integer,altdist : Integer,dyabs : Integer,dy2abs : Integer|
 	// override the method to create MseshFlits with routing information 
 	
 		/* Forwards a packet in the buffer as a flit to the router using relative destination coordinates */
@@ -29,9 +29,23 @@ methods
 		//argmin(abs(dx - x), abs(dimx - dx - x))
 		
 		//dy:= dy-NumberOfYNodes;
+		coord := Locator getCoordinatesOf(p getDestination) minus(Locator getCoordinatesOf(MyID));
+		dx := coord getX();
+		dy := coord getY();
+		absdx := dx;
+		if absdx<0 then
+		absdx := -absdx
+		fi;
+		altdist := NumberOfXNodes - absdx;
+		if altdist < absdx then
+			if dx < 0 then
+				altdist := -altdist
+			fi;
+			dx := altdist			
+		fi;
 		
-		coord := new(XYCoords) init(1, 0); 
-		coord printString();			
+		coord := new(XYCoords) init(2, dy); 
+	
 		f := new(RingFlit) setPacket(p) setDestinationCoordinates(coord);
 		Network!Flit(f);
 		InputBuffer remove;
