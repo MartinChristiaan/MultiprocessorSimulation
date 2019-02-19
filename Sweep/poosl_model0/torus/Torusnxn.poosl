@@ -1,40 +1,49 @@
 import "Router.poosl"
+import "TDMFifo.poosl"
 cluster class Torusnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
 ports
 In1,In2,In3,In4,In5,In6,
-Out1,Out2,Out3,Out4,Out5,Out6
+Out1,Out2,Out3,Out4,Out5,Out6,
+IXL1_1,
+IYT1_1,
+OYB2_1,
+IXL1_4,
+OYB2_4,
+IYT2_4,
+IYT1_2,
+OXR2_2,
+OYB2_2,
+OXR2_5,
+OYB2_5,
+IYT2_5,
+IYT1_3,
+OXR2_3,
+OYB2_3,
+IXL2_3,
+OXR2_6,
+OYB2_6,
+IXL2_6,
+IYT2_6
 
 instances
-F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F13x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F12: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F14: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F14x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F21: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F25: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F25x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F31x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F32: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F31: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F36: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F36x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F45: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F46x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F41x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F45: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F41: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F56: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F54: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F52x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F52: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F64x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F65: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F63x: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F64: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
 F63: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-R1: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
-R2: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
-R3: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
-R4: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
-R5: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
-R6: Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
+R1: Router(RouterProcessingTime:= RouterProcessingTime,FifoCapacity := FifoCapacity,FifoProcessingTime := FifoProcessingTime,Xpos := 1,Ypos := 1,NumberOfXNodes:= 3,NumberOfYNodes:= 2)
+R2: Router(RouterProcessingTime:= RouterProcessingTime,FifoCapacity := FifoCapacity,FifoProcessingTime := FifoProcessingTime,Xpos := 2,Ypos := 1,NumberOfXNodes:= 3,NumberOfYNodes:= 2)
+R3: Router(RouterProcessingTime:= RouterProcessingTime,FifoCapacity := FifoCapacity,FifoProcessingTime := FifoProcessingTime,Xpos := 3,Ypos := 1,NumberOfXNodes:= 3,NumberOfYNodes:= 2)
+R4: Router(RouterProcessingTime:= RouterProcessingTime,FifoCapacity := FifoCapacity,FifoProcessingTime := FifoProcessingTime,Xpos := 1,Ypos := 2,NumberOfXNodes:= 3,NumberOfYNodes:= 2)
+R5: Router(RouterProcessingTime:= RouterProcessingTime,FifoCapacity := FifoCapacity,FifoProcessingTime := FifoProcessingTime,Xpos := 2,Ypos := 2,NumberOfXNodes:= 3,NumberOfYNodes:= 2)
+R6: Router(RouterProcessingTime:= RouterProcessingTime,FifoCapacity := FifoCapacity,FifoProcessingTime := FifoProcessingTime,Xpos := 3,Ypos := 2,NumberOfXNodes:= 3,NumberOfYNodes:= 2)
 channels
 {In1, R1.In }
 {Out1, R1.Out }
@@ -48,51 +57,51 @@ channels
 {Out5, R5.Out }
 {In6, R6.In }
 {Out6, R6.Out }
-{F12.In, R1.OXR}
-{F12.Out, R2.IXL}
-{F13x.In, R1.OXL}
-{F13x.Out, R3.IXR}
-{F14.In, R1.OYB}
-{F14.Out, R4.IYT}
-{F14x.In, R1.OYT}
-{F14x.Out, R4.IYB}
-{F23.In, R2.OXR}
-{F23.Out, R3.IXL}
-{F21.In, R2.OXL}
-{F21.Out, R1.IXR}
-{F25.In, R2.OYB}
-{F25.Out, R5.IYT}
-{F25x.In, R2.OYT}
-{F25x.Out, R5.IYB}
-{F31x.In, R3.OXR}
-{F31x.Out, R1.IXL}
-{F32.In, R3.OXL}
-{F32.Out, R2.IXR}
-{F36.In, R3.OYB}
-{F36.Out, R6.IYT}
-{F36x.In, R3.OYT}
-{F36x.Out, R6.IYB}
-{F45.In, R4.OXR}
-{F45.Out, R5.IXL}
-{F46x.In, R4.OXL}
-{F46x.Out, R6.IXR}
-{F41x.In, R4.OYB}
-{F41x.Out, R1.IYT}
-{F41.In, R4.OYT}
-{F41.Out, R1.IYB}
-{F56.In, R5.OXR}
-{F56.Out, R6.IXL}
-{F54.In, R5.OXL}
-{F54.Out, R4.IXR}
-{F52x.In, R5.OYB}
-{F52x.Out, R2.IYT}
-{F52.In, R5.OYT}
-{F52.Out, R2.IYB}
-{F64x.In, R6.OXR}
-{F64x.Out, R4.IXL}
-{F65.In, R6.OXL}
-{F65.Out, R5.IXR}
-{F63x.In, R6.OYB}
-{F63x.Out, R3.IYT}
-{F63.In, R6.OYT}
-{F63.Out, R3.IYB}
+{F12.In1, R1.OXR1}
+{F12.In2, R1.OXR2}
+{F12.Out1, R2.IXL1}
+{F12.Out2, R2.IXL2}
+{F14.In, R1.OYB1}
+{F14.Out, R4.IYT1}
+{F23.In, R2.OXR1}
+{F23.Out, R3.IXL1}
+{F25.In, R2.OYB1}
+{F25.Out, R5.IYT1}
+{F31.In, R3.OXR1}
+{F31.Out, R1.IXL2}
+{F36.In, R3.OYB1}
+{F36.Out, R6.IYT1}
+{F45.In1, R4.OXR1}
+{F45.In2, R4.OXR2}
+{F45.Out1, R5.IXL1}
+{F45.Out2, R5.IXL2}
+{F41.In, R4.OYB1}
+{F41.Out, R1.IYT2}
+{F56.In, R5.OXR1}
+{F56.Out, R6.IXL1}
+{F52.In, R5.OYB1}
+{F52.Out, R2.IYT2}
+{F64.In, R6.OXR1}
+{F64.Out, R4.IXL2}
+{F63.In, R6.OYB1}
+{F63.Out, R3.IYT2}
+{IXL1_1,R1.IXL1}
+{IYT1_1,R1.IYT1}
+{OYB2_1,R1.OYB2}
+{IXL1_4,R4.IXL1}
+{OYB2_4,R4.OYB2}
+{IYT2_4,R4.IYT2}
+{IYT1_2,R2.IYT1}
+{OXR2_2,R2.OXR2}
+{OYB2_2,R2.OYB2}
+{OXR2_5,R5.OXR2}
+{OYB2_5,R5.OYB2}
+{IYT2_5,R5.IYT2}
+{IYT1_3,R3.IYT1}
+{OXR2_3,R3.OXR2}
+{OYB2_3,R3.OYB2}
+{IXL2_3,R3.IXL2}
+{OXR2_6,R6.OXR2}
+{OYB2_6,R6.OYB2}
+{IXL2_6,R6.IXL2}
+{IYT2_6,R6.IYT2}

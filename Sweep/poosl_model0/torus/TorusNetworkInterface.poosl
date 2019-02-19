@@ -19,32 +19,24 @@ init
 
 methods
 
-	ForwardToNetwork()() |p: Packet, f: Flit,dx:Integer,dy:Integer,coord: XYCoords,altdist : Integer,absdx : Integer,dyabs : Integer,dy2abs : Integer|
-	// override the method to create MseshFlits with routing information 
-	
-		/* Forwards a packet in the buffer as a flit to the router using relative destination coordinates */
+	ForwardToNetwork()() |p: Packet, f: Flit,Xdest,Ydest,Xsource,Ysource:Integer,dest,source: XYCoords|
 		
 		[InputBuffer isEmpty not] p := InputBuffer inspect;
-		// For a torus this should be different here destination should be 
-		//argmin(abs(dx - x), abs(dimx - dx - x))
-		coord := Locator getCoordinatesOf(p getDestination) minus(Locator getCoordinatesOf(MyID));
-		dx := coord getX();
-		dy := coord getY();
-		absdx := dx;
-		if absdx<0 then
-		absdx := -absdx
-		fi;
-		altdist := NumberOfXNodes - absdx;
-		if altdist < absdx then
-			if dx < 0 then
-				altdist := -altdist
-			fi;
-			dx := altdist			
-		fi;
+		dest := Locator getCoordinatesOf(p getDestination);
+		source := Locator getCoordinatesOf(MyID);
+		Xdest := dest getX() ;
+		Xsource := source getX();
+		Ydest := dest getY() ;
+		Ysource := source getY();
 		
-		coord := new(XYCoords) init(2, dy); 
-		coord printString();			
-		f := new(TorusFlit) setPacket(p) setDestinationCoordinates(coord);
+		if Xdest<Xsource then
+			Xdest:=Xdest+NumberOfXNodes
+		fi;
+		if Ydest<Ysource then
+			Ydest:=Ydest+NumberOfYNodes
+		fi;
+		dest := new(XYCoords) init(Xdest, Ydest);		
+		f := new(TorusFlit) setPacket(p) setDestinationCoordinates(dest);
 		Network!Flit(f);
 		InputBuffer remove;
 		ForwardToNetwork()()

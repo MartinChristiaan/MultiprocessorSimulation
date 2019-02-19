@@ -1,6 +1,6 @@
 import "TorusFlit.poosl"
 
-process class PositiveRouter (ProcessingTime: Real)
+process class DimRouter (ProcessingTime: Real)
 ports
 	In, IXL, IYT, Out, OXR, OYB
 messages

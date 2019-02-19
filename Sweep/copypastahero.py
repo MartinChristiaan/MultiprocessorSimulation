@@ -198,42 +198,73 @@ def cook_torus(dimx,dimy,dest):
     lines = []
     a = lambda line:lines.append(line + "\n")
     a('import "Router.poosl"')
+    a('import "TDMFifo.poosl"')
     a('cluster class Torusnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)')  
     a('ports')
     rx = range(1,dimx+1)
     ry = range(1,dimy+1)
     
+    def mid(x,y):
+        return str(x + (y-1)*dimx)
+
     line = ""
     for y in ry:
         for x in rx:   
-            line+= "In" + str(x + (y-1)*dimx) + ","
+            line+= "In" + mid(x,y) + ","
     a(line)
     line = ""
     for y in ry:
         for x in rx:   
-            line+= "Out" + str(x + (y-1)*dimx) + ","
+            line+= "Out" + mid(x,y) + ","
     a(line)
-    #mesh_ports(a,dimx,"In","I")
-    #mesh_ports(a,dimx,"Out","O")
+    
+    ## Disconnected ports
+    for x in rx:
+        for y in ry:
+            if x == 1:
+                a('IXL1_' + mid(x,y)+ ",")
+            if y == 1:
+                a('IYT1_' + mid(x,y)+ ",")
+            if x >= dimx-1:
+                a('OXR2_' + mid(x,y)+ ",")
+            if y >= dimy-1:
+                a('OYB2_' + mid(x,y)+ ",")
+            if x == dimx : 
+                a('IXL2_' + mid(x,y)+ ",")
+            if y == dimy : 
+                a('IYT2_' + mid(x,y)+ ",")
+                
+                
     lines[-1] = lines[-1][:-2]+"\n" # remove comma
 
     a('')
     a('instances')
     
-    baseline = ": Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)"
+    baseline1 = ": Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)"
+    baseline2 = ": TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)"
+    
     for y in ry:
         for x in rx:
-            my_id, right, left, up, down = get_ids(x, y,dimx, dimy)
-               
-            a("F" + my_id + right + baseline)
-            a("F" + my_id + left + baseline)
-            a("F" + my_id + up + baseline)
-            a("F" + my_id + down + baseline)
+            right = mid(x+1,y)
+            if x == dimx:
+                right = mid(1,y)
+            if x < dimx-1:
+                a("F" + mid(x,y) + right + baseline2)
+            else:
+                a("F" + mid(x,y) + right + baseline1)
+
+            down = mid(x,y+1)
+            if y == dimy:
+                down = mid(x,1)
+            if y < dimy-1:
+                a("F" + mid(x,y) + down + baseline2)
+            else:
+                a("F" + mid(x,y) + down + baseline1)
              
     for y in ry:
         for x in rx:
             myid = str(x + (y-1) * dimx)
-            a("R" + myid +": Router(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)")
+            a("R" + myid +": Router(RouterProcessingTime:= RouterProcessingTime,FifoCapacity := FifoCapacity,FifoProcessingTime := FifoProcessingTime,Xpos := "+ str(x) + ",Ypos := "+str(y)+",NumberOfXNodes:= "+str(dimx)+",NumberOfYNodes:= "+str(dimy)+")")
     
     a('channels')
     for y in ry:
@@ -241,33 +272,54 @@ def cook_torus(dimx,dimy,dest):
             myid = str(x + (y-1) * dimx)
             a('{In'+myid+ ', R'+myid+'.In }')
             a('{Out'+myid+ ', R'+myid+'.Out }')    
+    
     for y in ry:
         for x in rx:
-            my_id, right, left, up, down = get_ids(x, y, dimx,dimy)
-            myf = "F" + my_id  + right 
-            if right[-1]=='x':
-                right = right[:-1]
-            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OXR" + '}')
-            a('{' +myf+ ".Out"+ ', ' + "R" + right + ".IXL" +'}')
-            myf = "F" + my_id  + left 
-            if left[-1]=='x':
-                left = left[:-1]
-            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OXL" + '}')
-            a('{' +myf+ ".Out"+ ', ' + "R" + left + ".IXR" +'}')
+            right = mid(x+1,y)
 
-            myf = "F" + my_id  + up 
-            if up[-1]=='x':
-                up = up[:-1]
-            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OYB" + '}')
-            a('{' +myf+ ".Out"+ ', ' + "R" + up + ".IYT" +'}') 
-            
-            myf = "F" + my_id  + down 
-            if down[-1]=='x':
-                down = down[:-1]
+            if x < dimx-1:
+                a("{F" + mid(x,y) + right + ".In1, R" + mid(x,y) + ".OXR1}" )
+                a("{F" + mid(x,y) + right + ".In2, R" + mid(x,y) + ".OXR2}" )
+                a("{F" + mid(x,y) + right + ".Out1, R" + right + ".IXL1}" )
+                a("{F" + mid(x,y) + right + ".Out2, R" + right + ".IXL2}" )
+            elif x == dimx:
+                right = mid(1,y)
+                a("{F" + mid(x,y) + right + ".In, R" + mid(x,y) + ".OXR1}" )
+                a("{F" + mid(x,y) + right + ".Out, R" + right + ".IXL2}" )
+            else:
+                a("{F" + mid(x,y) + right + ".In, R" + mid(x,y) + ".OXR1}" )
+                a("{F" + mid(x,y) + right + ".Out, R" + right + ".IXL1}" )
 
-            a('{' +myf+ ".In"+ ', ' + "R" + my_id + ".OYT" + '}')
-            a('{' +myf+ ".Out"+ ', ' + "R" + down + ".IYB" +'}')  
-
+            down = mid(x,y+1)
+            if y < dimy-1:
+                a("{F" + mid(x,y) + down + ".In1, R" + mid(x,y) + ".OYB1}" )
+                a("{F" + mid(x,y) + down + ".In2, R" + mid(x,y) + ".OYB2}" )
+                a("{F" + mid(x,y) + down + ".Out1, R" + down + ".IYT1}" )
+                a("{F" + mid(x,y) + down + ".Out2, R" + down + ".IYT2}" )
+            elif y == dimy:
+                down = mid(x,1)
+                a("{F" + mid(x,y) + down + ".In, R" + mid(x,y) + ".OYB1}" )
+                a("{F" + mid(x,y) + down + ".Out, R" + down + ".IYT2}" )
+            else:
+                a("{F" + mid(x,y) + down + ".In, R" + mid(x,y) + ".OYB1}" )
+                a("{F" + mid(x,y) + down + ".Out, R" + down + ".IYT1}" )
+    
+    # Disconnected ports
+    for x in rx:
+        for y in ry:
+            if x == 1:
+                a('{IXL1_' + mid(x,y)+ ",R" + mid(x,y) + ".IXL1}")
+            if y == 1:
+                a('{IYT1_' + mid(x,y)+ ",R" + mid(x,y) + ".IYT1}")
+            if x >= dimx-1:
+                a('{OXR2_' + mid(x,y)+ ",R" + mid(x,y) + ".OXR2}")
+            if y >= dimy-1:
+                a('{OYB2_' + mid(x,y)+ ",R" + mid(x,y) + ".OYB2}")
+            if x == dimx : 
+                a('{IXL2_' + mid(x,y)+ ",R" + mid(x,y) + ".IXL2}")
+            if y == dimy : 
+                a('{IYT2_' + mid(x,y)+ ",R" + mid(x,y) + ".IYT2}")
+ 
 
 
     f = open(dest,'w')
@@ -372,4 +424,4 @@ def cook_ring(dim,dest):
     f.writelines(lines)
     f.close()           
 
-cook_ring(3,"output.poosl")
+cook_torus(2,2,"output.poosl")
