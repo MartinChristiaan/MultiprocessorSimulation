@@ -45,6 +45,8 @@ def autosim_multiproc(simfun,config_df,resultpath="result.csv"):
 
     processes = []
     for i in range(1,6):
+       import shutil
+       shutil.copytree("poosl_model0", "poosl_model" +str(i)) 
        p = Process(target=perform_sim, args=(q,simfun,config_df.columns,i))
        p.start()
        processes.append(p)
@@ -72,8 +74,9 @@ def autosim_multiproc(simfun,config_df,resultpath="result.csv"):
         result_df = result_df.append(row_df)
         result_df.to_csv("result0.csv",index = False)
         dt = time.time()-tstart
-    for p in processes:
+    for i,p in enumerate(processes):
        p.join()
+       shutil.rmtree("poosl_model" +str(i+1))
 
   
 

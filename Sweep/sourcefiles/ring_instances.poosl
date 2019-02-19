@@ -6,9 +6,9 @@ Load: Real, MeanBurstSize: Real, NIBufferCapacity: Integer, NumberOfXNodes: Inte
 NITransferDelay: Real)
 ports
 instances
-	N1: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 1, NumberOfNodes := 2)
-	N2: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 2, NumberOfNodes := 2)
-	N3: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 2, NumberOfNodes := 2)
+	N1: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 1, NumberOfNodes := NumberOfXNodes)
+	N2: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 2, NumberOfNodes := NumberOfXNodes)
+	N3: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 3, NumberOfNodes := NumberOfXNodes)
 
 RingNetwork: RingBasedNetwork(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, NIBufferCapacity := NIBufferCapacity,
 NumberOfXNodes := NumberOfXNodes, NumberOfYNodes := 1, RouterProcessingTime := RouterProcessingTime, TransferDelay := NITransferDelay)

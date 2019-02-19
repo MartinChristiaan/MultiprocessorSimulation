@@ -1,15 +1,15 @@
-import "ring/instances.poosl"
+importlib "ring/instances.poosl"
 
 system
 instances
-	SoC_Ring: Ring(
+	SoC: Ring(
 		AccuracyCheckInterval := 1.0, 
-		FifoCapacity := 1, 
+		FifoCapacity := 2, 
 		FifoProcessingTime := 0.00025, 
 		LinkCapacity := 600.0, 
-		Load := 0.95, 
+		Load := 0.45, 
 		MeanBurstSize := 12.0, 
-		NIBufferCapacity := 1, 
+		NIBufferCapacity := 2, 
 		NumberOfXNodes := 4, 
 		NumberOfYNodes := 1, 
 		RouterProcessingTime := 0.0006,

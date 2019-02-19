@@ -4,7 +4,7 @@ import "RingNetworkInterface.poosl"
 cluster class RingBasedNetwork (FifoCapacity: Integer, FifoProcessingTime: Real, NIBufferCapacity: Integer, NumberOfXNodes: Integer,
 NumberOfYNodes: Integer, RouterProcessingTime: Real, TransferDelay: Real)
 ports
-Node1, Node2,Node3
+Node1, Node2, Node3
 instances
 Ring: Ringnxn(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 

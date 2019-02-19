@@ -3,18 +3,20 @@ import "TDMRouter.poosl"
 import "TDMFifo.poosl"
 cluster class Ringnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
 ports
-In1,In2,In3,
-Out1,Out2,Out3,
+In1,In2,In3,In4,
+Out1,Out2,Out3,Out4,
 IXL1_start,
 OXR2_stop
 
 instances
 F12: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-F31: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
-R1: TDMRouter (ProcessingTime:= RouterProcessingTime,Xpos := 1,NumberOfXNodes:= 3)
-R2: TDMRouter (ProcessingTime:= RouterProcessingTime,Xpos := 2,NumberOfXNodes:= 3)
-R3: Router (ProcessingTime:= RouterProcessingTime,Xpos := 3,NumberOfXNodes:= 3)
+F23: TDMFifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F34: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F41: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+R1: TDMRouter (ProcessingTime:= RouterProcessingTime,Xpos := 1,NumberOfXNodes:= 4)
+R2: TDMRouter (ProcessingTime:= RouterProcessingTime,Xpos := 2,NumberOfXNodes:= 4)
+R3: TDMRouter (ProcessingTime:= RouterProcessingTime,Xpos := 3,NumberOfXNodes:= 4)
+R4: Router (ProcessingTime:= RouterProcessingTime,Xpos := 4,NumberOfXNodes:= 4)
 channels
 {In1, R1.In }
 {Out1, R1.Out }
@@ -22,13 +24,19 @@ channels
 {Out2, R2.Out }
 {In3, R3.In }
 {Out3, R3.Out }
+{In4, R4.In }
+{Out4, R4.Out }
 {IXL1_start,R1.IXL1}
 {F12.In1, R1.OXR1}
 {F12.In2, R1.OXR2}
 {F12.Out1, R2.IXL1}
 {F12.Out2, R2.IXL2}
-{F23.In, R2.OXR1}
-{F23.Out, R3.IXL1}
-{OXR2_stop,R2.OXR2}
-{F31.In, R3.OXR1}
-{F31.Out, R1.IXL2}
+{F23.In1, R2.OXR1}
+{F23.In2, R2.OXR2}
+{F23.Out1, R3.IXL1}
+{F23.Out2, R3.IXL2}
+{F34.In, R3.OXR1}
+{F34.Out, R4.IXL1}
+{OXR2_stop,R3.OXR2}
+{F41.In, R4.OXR1}
+{F41.Out, R1.IXL2}
