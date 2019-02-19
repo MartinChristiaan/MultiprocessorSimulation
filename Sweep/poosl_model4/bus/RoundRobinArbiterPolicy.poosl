@@ -1,0 +1,29 @@
+import "BusRequests.poosl"
+
+data class RoundRobinArbiterPolicy extends Object
+// Data class that represents a round robin arbitration policy
+
+variables
+	LastGranted: Integer
+
+methods
+	next(d: BusRequests) : Integer  
+	// select the next request from the set d to be granted
+	// Assumes that at least one NI demands the bus
+	|i: Integer|
+		
+		// Round Robin order of granting access requests 
+		if LastGranted == nil then
+			i := 1
+		else
+			i := (LastGranted modulo(d getSize)) + 1 
+		fi;
+		// check until we find a request for an NI with ID i
+		while d check(i) not do
+			i := (i modulo(d getSize)) + 1 
+		od;
+		// remember which NI we have granted a request
+		LastGranted := i;
+		
+		return i
+

@@ -1,0 +1,43 @@
+
+data class Packet extends Object
+// Models a data packet
+// Only include get and set methods for its instance variables and printstring to obtain a textual representation
+
+variables
+	Source: Integer,		// Identifier of the source of the packet
+	Destination: Integer,	// Identifier of the destination for the packet 
+	EntranceTime: Real, 	// Monitoring data for statistical purposes to determine the processing time of packets
+	Number: Integer 		// Monitoring data for statistical purposes to uniquely identify a packet
+
+methods
+
+	getDestination() : Integer
+		return Destination
+		
+	getEntranceTime() : Real
+		return EntranceTime
+		
+	getNumber() : Integer
+		return Number
+		
+	getSource() : Integer
+		return Source
+		
+	printString:String
+		return Number printString + ":" + Source printString + "->" + Destination printString
+		
+	setDestination(d: Integer) : Packet
+		Destination:=d;
+		return self 
+
+	setEntranceTime(t: Real) : Packet
+		EntranceTime:=t;
+		return self
+
+	setNumber(n: Integer) : Packet
+		Number := n;
+		return self 
+
+	setSource(s: Integer) : Packet
+		Source := s;
+		return self

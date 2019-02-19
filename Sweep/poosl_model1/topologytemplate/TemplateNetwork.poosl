@@ -1,0 +1,48 @@
+import "../common/NetworkInterface.poosl"
+import "CRouter_2Ports.poosl"
+import "../common/Fifo.poosl"
+
+cluster class TemplateNetwork (NIBufferCapacity: Integer, NITransferDelay: Real, RouterProcessingTime: Real, FIFOCapacity: Integer, FIFOProcessingTime: Real)
+// 
+
+ports
+	Node1, Node2, Node3, Node4
+
+instances
+	NI1: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 1, TransferDelay := NITransferDelay)
+	NI2: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 2, TransferDelay := NITransferDelay)
+	NI3: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 3, TransferDelay := NITransferDelay)
+	NI4: NetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 4, TransferDelay := NITransferDelay)
+
+	R1: CRouter_2Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 1,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+	R2: CRouter_2Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 2,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+	R3: CRouter_2Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 3,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+	R4: CRouter_2Ports(RouterProcessingTime := RouterProcessingTime, MyNI := 4,
+			InputQueueCapacity := FIFOCapacity, InputQueueProcessingTime := FIFOProcessingTime)
+
+
+channels
+	{ Node1, NI1.Node }
+	 
+	 
+	
+	
+	{ NI1.Network, R1.InNode, R1.OutNode }	
+	{ R2.InNode, R2.OutNode , NI2.Network }
+	{ NI3.Network, R3.InNode,  R3.OutNode }
+	{ NI4.Network, R4.InNode, R4.OutNode }
+	
+{ NI2.Node, Node2 }
+	{ NI4.Node, Node4 }
+	{ NI3.Node, Node3 }
+	{ R2.Out2, R1.In1 }
+	{ R1.Out1, R2.In2 }
+	{ R4.In2, R2.Out1 }
+	{ R4.Out2, R2.In1 }
+	{ R3.Out2, R4.In1 }
+	{ R3.In2, R4.Out1 }
+	{ R1.Out2, R3.In1 }
+	{ R3.Out1, R1.In2 }

@@ -1,0 +1,83 @@
+import "../common/packet.poosl"
+import "../libraries/structures.poosl"
+import "Flit.poosl"
+
+process class NetworkInterface (BufferCapacity: Integer, MyID: Integer, TransferDelay: Real)
+// a model of a network interface
+// Parameters:
+//	BufferCapacity:	size of the input buffer from the node
+//	MyID:			ID of the network interface
+//	TransferDelay:	time it takes the NI to transfer a packet on the bus
+
+
+ports
+	Network, Node
+
+messages
+	// exchange packets with the nodes and flits with the network
+	Node!Packet(Packet),
+	Node?Packet(Packet)
+	Network!Flit(Flit),
+	Network?Flit(Flit)
+
+variables
+
+	// an input buffer to store packets until they can be sent to the network
+	InputBuffer: Queue
+
+init
+	Initialise()()
+
+methods
+
+	Initialise()()
+	// initialisation of the process
+
+		// create a fifo queue for the input buffer and set the capacity
+		InputBuffer := new(Queue) resize(BufferCapacity);
+		
+		// execute the three activities concurrently, the methods do not terminate
+		par
+			ReceiveFromNode()()
+		and
+			ForwardToNetwork()()
+		and
+			TransferNetwork2Node()()
+		rap
+
+
+	ForwardToNetwork()()
+	// forward packets to the network (as flits)
+	 
+	 	// if there is a packet in the input buffer...
+		[InputBuffer isEmpty not] 
+			// then send it to the network as a flit object
+			Network!Flit(new(Flit) setPacket(InputBuffer inspect()));
+		// delay to model the time it takes 
+		delay(TransferDelay);
+		// now remove the packet from the input buffer, releasing the buffer space
+		InputBuffer remove;
+		// repeat the behaviour forever by calling the method again 
+		ForwardToNetwork()()
+
+	ReceiveFromNode()() 
+	// Receive a packet from node and put it into the input buffer as long as the buffer is not full 
+	|p: Packet|
+	
+		// if the input buffer is not full, receive a packet from the node
+		[InputBuffer isFull not] Node?Packet(p) {
+			// and immediately put it into the buffer, registering the time stamp when this happens
+			InputBuffer add(p setEntranceTime(currentTime))};
+		// repeat this method forever
+		ReceiveFromNode()()
+		
+	TransferNetwork2Node()() 
+	// Transfer a packet from the bus destined for this network interface directly to the corresponding node (without buffering!)
+	|f: Flit| 
+
+		// receive a flit from the network, only if it has the right destination ID		
+		Network?Flit( f | f getDestination = MyID);
+		// forward the received packet to the node
+		Node!Packet(f getPacket());
+		// repeat this method forever
+		TransferNetwork2Node()()

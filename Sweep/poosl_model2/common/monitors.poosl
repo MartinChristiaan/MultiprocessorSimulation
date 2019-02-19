@@ -1,0 +1,61 @@
+import "../libraries/performance.poosl"
+
+data class NIMonitors extends Object
+// A statistical monitor for network interfaces
+// It collects information about the latency and send rate of packets
+
+variables
+	Latency: LongRunSampleAverage, 
+	NumberOfCollectedLatencyRewards: Integer, 
+	NumberOfCollectedSendRateRewards: Integer, 
+	SendRate: LongRunTimeAverage
+	
+methods
+	accurate() : Boolean
+	// checks if the collected data are already sufficiently accurate
+		return Latency accurate & SendRate accurate
+	
+	init(MyID: Integer) : NIMonitors
+	// initialization
+		NumberOfCollectedLatencyRewards := 0;
+		NumberOfCollectedSendRateRewards := 0;
+		Latency := new(LongRunSampleAverage) 
+						withParameters(0.95, 0.95) 
+						setBatchSize(1000) 
+						logTo("Latency" + MyID printString);
+		SendRate := new(LongRunTimeAverage) 
+						withParameters(0.95, 0.90) 
+						setBatchSize(1000) 
+						logTo("SendRate" + MyID printString);
+		return self
+	
+	log() : NIMonitors
+	// log the collected statistics to file
+		SendRate log; 	// log the send rate statistics
+		Latency log;	// log the latency statistics
+			
+		return self
+	
+	printString() : String
+	// generate a textual representation 
+	|PrintOut: String|
+	
+		PrintOut := "Statistics for the actual Send Rate at the sending part of the Network Interface:" cr + SendRate printStatistics cr cr;
+		PrintOut := PrintOut + "Statistics for packet Latency at the receiving side of the Network Interface:" cr + Latency printStatistics;
+		
+		return PrintOut
+	
+	rewardLatency(l: Real) : NIMonitors
+	// register a new latency sample
+		Latency rewardBM(l);
+		NumberOfCollectedLatencyRewards := NumberOfCollectedLatencyRewards + 1;
+		if NumberOfCollectedLatencyRewards modulo(1000) = 0 then Latency log fi;
+		return self
+	
+	rewardSendRate(r, t: Real) : NIMonitors
+	// register a new send rate sample	
+		SendRate rewardBM(r, t);
+		NumberOfCollectedSendRateRewards := NumberOfCollectedSendRateRewards + 1;
+		if NumberOfCollectedSendRateRewards modulo(1000) = 0 then SendRate log fi;
+		return self
+		

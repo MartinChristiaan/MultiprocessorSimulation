@@ -1,0 +1,87 @@
+import "TorusFlit.poosl"
+import "../common/Fifo.poosl"
+process class TDM1DRouter (ProcessingTime: Real,pos : Integer,NrNodes: Integer,dim : Integer)
+ports
+	In, I1,I2 Out, O1,O2
+messages
+	In?Flit(TorusFlit),
+	I1?Flit(TorusFlit),
+	I2?Flit(TorusFlit),	
+	
+	Out!Flit(TorusFlit),
+	O1!Flit(TorusFlit),
+	O2!Flit(TorusFlit),
+
+variables
+	Buffer1sTurn : Boolean
+	Buffer2sTurn : Boolean
+init
+	MyInit()()
+	
+methods
+	ManageTurns()()
+		Buffer1sTurn := true;
+		delay(ProcessingTime*10.0);
+		Buffer1sTurn := false;
+		delay(ProcessingTime);
+		Buffer2sTurn := true;
+		delay(ProcessingTime*10.0);
+		Buffer2sTurn := false;
+		delay(ProcessingTime);
+		ManageTurns()()
+
+	TransferFlit1()() |f: Flit,fp : Integer|
+		
+		/* Receives and forwards a flit for the positive direction */		
+		sel
+			In?Flit(f)
+		or
+			I1?Flit(f)
+		les;
+		[Buffer1sTurn]		
+		delay(ProcessingTime);
+		if dim == 1 then
+			fp := f getXCoordinate()
+		else
+			fp := f getYCoordinate()
+		fi;
+				
+		if  fp- pos > 0 then
+			O1!Flit(f)			
+		else
+			Out!Flit(f)
+		fi;		
+		TransferFlit1()()
+	
+	TransferFlit2()() |f: Flit,fp : Integer|
+		
+		/* Receives and forwards a flit for the positive direction */		
+		I2?Flit(f);
+		[Buffer2sTurn]		
+		delay(ProcessingTime);
+		if dim == 1 then
+			fp := f getXCoordinate()
+		else
+			fp := f getYCoordinate()
+		fi;
+				
+		if  fp- pos > NrNodes then
+			O2!Flit(f)			
+		else
+			Out!Flit(f)
+		fi;		
+		TransferFlit2()()
+			
+				
+	MyInit()()
+		Buffer1sTurn := false;
+		Buffer2sTurn := false;
+		par
+			TransferFlit1()()
+		and
+			TransferFlit2()()
+		and
+			ManageTurns()()
+		rap
+		
+		

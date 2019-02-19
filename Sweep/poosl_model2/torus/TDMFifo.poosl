@@ -1,0 +1,83 @@
+import "TorusFlit.poosl"
+import "../libraries/structures.poosl"
+
+process class TDMFifo (Capacity: Integer, ProcessingTime: Real)
+// A Fifo models a bounded FIFO buffer for flits, including the time it takes to (concurrently) read and write Flits 
+// Parameters:
+//	Capacity: 		the number of flits that can be stored in the Fifo
+//  ProcessingTime: the amount of time it takes to process a single flit on input or output
+
+ports
+	In1,In2, Out1,Out2
+
+messages
+	In1?Flit(Flit),
+	In2?Flit(Flit),
+	Out1!Flit(Flit),
+	Out2!Flit(Flit)
+
+variables
+	Buffer1: Queue
+	Buffer2: Queue
+	Buffer1sTurn : Boolean
+	Buffer2sTurn : Boolean
+
+init
+	Initialise()()
+
+methods
+			
+	
+	HandleInput1()() |f: Flit|
+		[Buffer1 isFull not ][Buffer1sTurn] In1?Flit(f){Buffer1 add(f)};
+ 		delay(ProcessingTime);
+		HandleInput1()()
+		
+	HandleInput2()() |f: Flit|
+		[Buffer2 isFull not ][Buffer2sTurn] In2?Flit(f){Buffer2 add(f)};
+ 		delay(ProcessingTime);
+		HandleInput2()()
+	
+	HandleOutput1()() |f: Flit|
+		[Buffer1 isEmpty not][Buffer1sTurn] f := Buffer1 inspect;
+		Out1!Flit(f);
+		delay(ProcessingTime);
+		Buffer1 remove;
+		HandleOutput1()()
+
+	HandleOutput2()() |f: Flit|
+		[Buffer2 isEmpty not][Buffer2sTurn] f := Buffer2 inspect;
+		Out2!Flit(f);
+		delay(ProcessingTime);
+		Buffer2 remove;
+		HandleOutput2()()
+	ManageTurns()()
+		Buffer1sTurn := true;
+		delay(ProcessingTime*10.0);
+		Buffer1sTurn := false;
+		delay(ProcessingTime);
+		Buffer2sTurn := true;
+		delay(ProcessingTime*10.0);
+		Buffer2sTurn := false;
+		delay(ProcessingTime);
+		ManageTurns()()
+	
+	Initialise()()
+	// Initialisation method
+		// Create the data object that will hold the flits in a Fifo queue manner and set its capacity 
+		Buffer1 := new(Queue) resize(Capacity);
+		Buffer2 := new(Queue) resize(Capacity);
+		Buffer1sTurn := false;
+		Buffer2sTurn := false;
+		// concurrently start handling input and output. These method calls will never terminate.
+		par
+			HandleInput1()()
+		and
+			HandleOutput1()()
+		and
+			HandleInput2()()
+		and
+			HandleOutput2()()
+		and 
+			ManageTurns()()
+		rap

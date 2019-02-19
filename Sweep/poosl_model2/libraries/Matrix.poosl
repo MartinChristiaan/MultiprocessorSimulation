@@ -1,0 +1,87 @@
+data class Matrix extends Object
+
+// class Matrix represents a two-dimensional array
+
+variables
+	NrOfColumns: Integer, NrOfRows: Integer, Rows: Array
+methods
+	at(RowIndex, ColumnIndex: Integer): Object
+	/* Returns the object stored at (RowIndex,ColumnIndex) */
+	
+	   if (RowIndex < 1) | (ColumnIndex < 1) | (RowIndex > NrOfRows) | (ColumnIndex > NrOfColumns) then
+	      self error("Matrix: Index out of bounds")
+	   fi;
+	
+	   return(Rows at(RowIndex) at(ColumnIndex))
+	
+	size() : Array
+	/* Returns an array with (NrOfRows, NrOfColumns) */
+	
+	   return(new(Array) resize(2) putAt(1, NrOfRows) putAt(2, NrOfColumns))
+		   
+	printString() : String |PrintOut: String, RowIndex, ColumnIndex: Integer|
+	/* Displays the contents of the matrix */
+	
+	   PrintOut := "Matrix(" concat(NrOfRows printString) concat(",") concat(NrOfColumns printString) concat("):") cr;
+	   RowIndex := 0;
+	   while RowIndex < NrOfRows do
+	      RowIndex := RowIndex + 1;
+	      ColumnIndex := 0;
+	      PrintOut concat("(");
+	      while ColumnIndex < NrOfColumns do
+	         ColumnIndex := ColumnIndex + 1;
+	         PrintOut concat(Rows at(RowIndex) at(ColumnIndex) printString);
+	         if ColumnIndex < NrOfColumns then
+	            PrintOut concat(",	")
+	         fi
+	      od;
+	      PrintOut concat(")") cr
+	   od;
+	
+	   return(PrintOut)
+
+	putAt(RowIndex, ColumnIndex: Integer, anObject: Object) : Matrix
+	/* Puts anObject at (RowIndex,ColumnIndex) in the matrix */
+	
+	   if (RowIndex < 1) | (ColumnIndex < 1) | (RowIndex > NrOfRows) | (ColumnIndex > NrOfColumns) then
+	      self error("Matrix: Index out of bounds")
+	   fi;
+	   Rows at(RowIndex) putAt(ColumnIndex, anObject);
+	
+	   return self
+	   
+	putAll(anObject: Object) : Matrix |RowIndex: Integer|
+	/* Puts anObject at every position in the matrix */
+	
+	   RowIndex := 1;
+	   while RowIndex <= NrOfRows do
+	      Rows at(RowIndex) putAll(anObject);
+	      RowIndex := RowIndex + 1
+	   od;
+	
+	   return self
+	   
+	resize(numberOfRows, numberOfColumns: Integer) : Matrix |Index: Integer|
+	/* Resizes this matrix to (numberOfRows x numberOfColumns). Both dimensions should be non-negative. Resizing to a larger matrix will initialise new elements to nil. Resizing to smaller dimensions will drop the elements (i, j) where i > numberOfRows or j > numberOfColumns */
+	
+	   if Rows == nil then							/* Initialise this matrix for the first time. */
+	      Rows := new(Array);
+	      NrOfRows := 0
+	   fi;
+	   NrOfColumns := numberOfColumns;	
+	   Rows resize(numberOfRows);					/* Resize matrix */
+	   if NrOfRows > numberOfRows then 				/* Resizing to smaller dimensions will drop some rows */
+	      NrOfRows := numberOfRows
+	   fi;
+	   Index := 0;
+	   while Index < NrOfRows do					/* Resize existing rows */
+	      Index := Index + 1;
+	      Rows at(Index) resize(NrOfColumns)
+	   od;
+	   while NrOfRows < numberOfRows do				/* Add new rows */
+	      NrOfRows := NrOfRows + 1;
+	      Rows putAt(NrOfRows, new(Array) resize(NrOfColumns))
+	   od;
+	
+	   return self
+	   

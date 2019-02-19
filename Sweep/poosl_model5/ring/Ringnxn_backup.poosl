@@ -1,0 +1,49 @@
+import "Router.poosl"
+cluster class Ringnxn (FifoCapacity: Integer, FifoProcessingTime: Real, RouterProcessingTime: Real)
+ports
+In1,In2,In3,
+IXL1_1,OXR2_3
+Out1,Out2,Out3
+
+instances
+F12: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F23: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F34: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F45: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+F56: Fifo(Capacity := FifoCapacity, ProcessingTime := FifoProcessingTime)
+
+R14: Router (ProcessingTime:= RouterProcessingTime,Xpos := 1,NumberOfXNodes:= 3)
+R25: Router (ProcessingTime:= RouterProcessingTime,Xpos := 2,NumberOfXNodes:= 3)
+R36: Router (ProcessingTime:= RouterProcessingTime,Xpos := 3,NumberOfXNodes:= 3)
+
+channels
+{In1, R14.In }
+{Out1, R14.Out }
+{In2, R25.In }
+{Out2, R25.Out }
+{In3, R36.In }
+{Out3, R36.Out }
+
+
+{F12.In, R14.OXR1}
+{F12.Out, R25.IXL1}
+
+{F23.In, R25.OXR1}
+{F23.Out, R36.IXL1}
+
+{F34.In, R36.OXR1}
+{F34.Out, R14.IXL2}
+
+{F45.In, R14.OXR2}
+{F45.Out, R25.IXL2}
+
+{F56.In, R25.OXR2}
+{F56.Out, R36.IXL2}
+{IXL1_1,R14.IXL1}
+{OXR2_3,R36.OXR2}
+
+
+
+
+
+

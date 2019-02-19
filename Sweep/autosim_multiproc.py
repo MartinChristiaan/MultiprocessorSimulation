@@ -77,6 +77,16 @@ def autosim_multiproc(simfun,config_df,resultpath="result.csv"):
     for i,p in enumerate(processes):
        p.join()
        shutil.rmtree("poosl_model" +str(i+1))
+       
+
+def merge_results(nproc):      
+    import pandas as pd       
+    final_result = pd.DataFrame()
+    for id in range(nproc):   
+        result = pd.read_csv("result" + str(id) + ".csv")
+        final_result = final_result.append(result,ignore_index=False)
+    final_result.to_csv("Final_result.csv")
+merge_results(6)
 
   
 

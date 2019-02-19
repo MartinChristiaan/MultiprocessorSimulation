@@ -1,0 +1,35 @@
+import "RingFlit.poosl"
+
+process class PositiveRouter (ProcessingTime: Real)
+ports
+	In, IXL, Out, OXR
+messages
+	In?Flit(RingFlit),
+	IXL?Flit(RingFlit),
+	Out!Flit(RingFlit),
+	OXR!Flit(RingFlit),
+variables
+	
+init
+	TransferFlit()()
+methods
+	TransferFlit()() |f: Flit|
+		
+		/* Receives and forwards a flit for the positive direction */
+		
+		sel
+			In?Flit(f)
+		or
+			IXL?Flit(f)
+		les;
+		
+		delay(ProcessingTime);
+		
+		if f getXCoordinate > 0 then
+			f decrXCoordinate;
+			OXR!Flit(f)
+		else
+			Out!Flit(f)
+		fi;
+		
+		TransferFlit()()

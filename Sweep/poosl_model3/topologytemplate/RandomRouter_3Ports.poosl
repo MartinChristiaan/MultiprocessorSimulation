@@ -1,0 +1,75 @@
+import "../common/Flit.poosl"
+import "../libraries/distributions.poosl"
+
+process class RandomRouter_3Ports(ProcessingTime : Real, MyNI: Integer)
+
+ports
+	InNode, 
+	In1, 
+	In2,
+	In3,
+	OutNode, 
+	Out1, 
+	Out2,
+	Out3
+	
+messages
+
+	InNode?Flit(Flit)
+	In1?Flit(Flit)
+	In2?Flit(Flit)
+	In3?Flit(Flit)
+	OutNode!Flit(Flit)
+	Out1!Flit(Flit)
+	Out2!Flit(Flit)
+	Out3!Flit(Flit)
+	
+variables
+	RoutingDistribution: Distribution
+
+init
+	Initialise()()
+
+methods
+
+	Initialise()()
+		RoutingDistribution := new(DiscreteUniform) withParameters(1, 3);
+		TransferFlit()()
+
+
+	TransferFlit()() 
+	|f: Flit, i: Integer|
+		
+		sel
+			InNode?Flit(f)
+		or
+			In1?Flit(f)
+		or
+			In2?Flit(f)
+		or
+			In3?Flit(f)
+		les;
+		
+		delay(ProcessingTime);
+		
+		// some routing logic should go here
+		// this example router is not very smart and only recognises flits for the local node
+		if f getDestination() == MyNI then
+			// deliver the flit to a random other router
+			
+			OutNode!Flit(f)
+		else 
+			// pick a random router 
+			i := RoutingDistribution sample();
+			if i==1 then
+				Out1!Flit(f)
+			else if i==2 then 
+				Out2!Flit(f)
+			else if i==3 then 
+				Out3!Flit(f)
+			fi fi fi
+		fi;
+		
+		TransferFlit()()		
+		
+

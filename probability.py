@@ -7,3 +7,5 @@ for i in range(N):
         for k in range(j):
             paths[i+k]+=1
 print(paths)
+
+

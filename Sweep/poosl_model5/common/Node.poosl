@@ -1,0 +1,145 @@
+import "../libraries/distributions.poosl"
+
+import "../common/packet.poosl"
+import "../common/monitors.poosl"
+
+process class Node (AccuracyCheckInterval: Real, LinkCapacity: Real, Load: Real, MeanBurstSize: Real, MyID: Integer, NumberOfNodes: Integer)
+// model a processor node connected to the network
+// Parameters:
+//	AccuracyCheckInterval:	time interval at which to check if the collected statistics are sufficiently accurate
+//	LinkCapacity:			capacity (bandwidth) of the link to the NI
+//	Load:					load that the node will generate for the network
+//	MeanBurstSize:			the traffic that it generates is bursty, this parameter determines the average burst length
+//	MyID:					the identifier for the node
+//	NumberOfNodes:			the number of nodes in the network to determine where it can send traffic to
+
+ports
+	NI
+
+messages
+	NI!Packet(Packet),
+	NI?Packet(Packet)
+
+variables
+	ArrayOfDestinations: Array,							// an array that will hold all possible traffic destinations 
+	DestinationIndexDistribution: Distribution, 		// a distribution of the destinations to be used randomly 
+	IdleTimeDistribution: Distribution, 				// a distribution for the idle times between bursts 
+	TransitionDistribution: Bernoulli,					// a distribution to determine continuation of a burst
+	Monitors: NIMonitors, 								// the statistical monitors
+	PacketNumber: Integer 								// a counter for packet numbers
+	PacketsReceived: Integer 							// a counter for received packets
+
+init
+	Initialise()()
+
+methods
+
+	Initialise()() 
+	// initialise the node
+	|P, Lambda: Real, i, j: Integer |
+	
+		// Initialise variables for packet generation from the given parameters*/	
+		// compute the Bernoulli parameter for the burst mode from the average burst length
+		P := (MeanBurstSize - 1.0) / MeanBurstSize;
+		// compute the parameter for the exponential idle time distribution from the Load and the burst parameter P
+		Lambda := Load * (1.0 - P) * LinkCapacity / (1.0 - Load);
+		// create the burst distribution
+		TransitionDistribution := new(Bernoulli) withParameter(P);
+		// create the idle time distribution
+		IdleTimeDistribution := new(Exponential) withParameter(Lambda);
+		// initialise the packet number counter
+		PacketNumber := 1;
+		// initialise the received packet counter
+		PacketsReceived := 0;
+		
+		// create an array with possible traffic destinations (all nodes except this one)
+		ArrayOfDestinations := new(Array) resize(NumberOfNodes - 1);
+		// i denotes the IDs of the potential destinations, j denoted the next index in the ArrayOfDestinations										
+		i := 1; j := 1;
+		while i < NumberOfNodes do
+			// if it is not this node...
+			if j != MyID then
+				// add it as a possible destination
+				ArrayOfDestinations putAt(i, j);
+				i := i + 1
+			fi;
+			j := j + 1
+		od;
+		// create an even (uniform) distribution over the allowed destinations
+		DestinationIndexDistribution := new(DiscreteUniform) withParameters(1, NumberOfNodes - 1);		
+		
+		// Initialise the performance monitors
+		Monitors := new(NIMonitors) init(MyID);
+		
+		// start the actual behaviour concurrently, none of the methods will end
+		par
+			Idle()()
+		and
+			ReceivePacket()()
+		and
+			CheckAccuracy()()																		
+		rap
+
+
+	Burst(Destination: Integer)() 
+	// generate and send one packet to Node with ID Destination during a burst 
+	|p:Packet|
+		// create a new packet with the packet number, sour ID and destination ID
+		p := new(Packet) 
+				setNumber(PacketNumber) 
+				setSource(MyID) 
+				setDestination(Destination);
+		// send the packet to the network interface and immediately increase the packet counter
+		NI!Packet(p){PacketNumber := PacketNumber + 1};
+		// register the statistics to estimate the average send rate, change the send rate to LinkCapacity now (currentTime) 
+		Monitors rewardSendRate(LinkCapacity, currentTime);
+		// delay for the time it takes according to LinkCapacity to send a single packet
+		delay(1.0 / LinkCapacity);
+		// register the statistics to estimate the average send rate, change the send rate to 0 now (currentTime) 
+		Monitors rewardSendRate(0.0, currentTime);						
+		
+		// decide randomly whether another packet must be sent in this burst 
+		if TransitionDistribution yieldsSuccess then
+			// yes! another packet will be sent
+			Burst(Destination)()
+		else
+			// no! go to Idle mode
+			Idle()()
+		fi
+		
+	CheckAccuracy()()
+	// periodically check if the collected statistics are sufficiently accurate, until they are accurate
+		// wait for the checking period
+		delay(AccuracyCheckInterval);
+		// now check if all monitors are accurate
+		if Monitors accurate not then
+			// if not, then continue by starting this method again
+			CheckAccuracy()()
+		fi
+		
+		
+	Idle()()
+	// insert a period of no traffic
+		// delay for the random idle time
+		delay(IdleTimeDistribution sample);
+		// then start a new burst of traffic to a random destination		
+		Burst(ArrayOfDestinations at(DestinationIndexDistribution sample))()
+	
+
+	ReceivePacket()() 
+	// Receive packets destined for this node
+	|p:Packet|
+
+		// receive a packet from the network interface		
+		NI?Packet(p) {
+			// and immediately register the latency (now minus the time the packet started) statistics
+			Monitors rewardLatency(currentTime - p getEntranceTime);
+			PacketsReceived := PacketsReceived + 1
+		};
+		
+		// trusting is good, but checking is better...
+		// is this packet really for us?				
+		if p getDestination != MyID then p error("Packet " + p printString + " arrived at wrong destination") fi;
+
+		// repeat this method forever
+		ReceivePacket()()
