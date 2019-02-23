@@ -1,0 +1,3 @@
+Statistics for the Long Run Sample Average Latency14.log with Accuracy 0.95Point Estimation:	Confidence Interval:			Confidence Level:	Relative Error:		Accurate:
+-------------------------------------------------------------------------------------------------------------------------
+Not Specified		[-inf, inf]				0.95			inf			falseNot Specified		[-inf, inf]				0.95			inf			false0.00614751961830529	[0.0061460548764721, 0.00614898436013848]	0.95			0.000238322283583162		true

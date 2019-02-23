@@ -15,7 +15,7 @@ N = np.arange(0,33)
 
 latencies = [np.ones_like(N),2*np.sqrt(N)/3,np.sqrt(N)/2,2*np.log2(N)]
 bisection_bandwidths = [np.ones_like(N),np.sqrt(N),2*np.sqrt(N),N*2]
-num_links = [N,(np.sqrt(N)-1)*2*np.sqrt(N),2*N,np.log2(N)*N*2]
+num_links = [N,(np.sqrt(N)-1)*2*np.sqrt(N)*2,2*N,np.log2(N)*N*2]
 num_routers = [np.ones_like(N),N,N,N-1]
 
 
@@ -23,8 +23,14 @@ arrs = [latencies,bisection_bandwidths,num_links,num_routers]
 markers = ["o","v","^","<",">","1","2","3","4"]
 traces = [[],[],[],[]]
 layouts = []
+
+f = plt.figure(figsize=(4, 9))
+#f,ax_arr = plt.subplots(4, sharex=True)
 for j,arr in enumerate(arrs):
-    plt.figure(figsize=(4, 3))
+
+    # print(j+1)
+    #ax = ax_arr[j]
+    plt.subplot(len(arrs),1,j+1)
     for i,val in enumerate(arr):        
         plt.plot(N,val,label = names[i], marker=markers[i])
     plt.ylabel(plot_names[j])
@@ -32,9 +38,9 @@ for j,arr in enumerate(arrs):
     plt.grid(1)
     plt.legend()
     
-    plt.tight_layout()
-    plt.savefig(plot_names[j].replace(' ','') + ".eps")
-
+#f.subplots_adjust(hspace=0)
+    #plt.savefig(plot_names[j].replace(' ','') + ".eps")
+plt.tight_layout()
 plt.show()
 
     # layouts.append(dict(title = plot_names[j],

@@ -10,6 +10,18 @@ instances
 	N2: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 2, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
 	N3: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 3, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
 	N4: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 4, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N5: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 5, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N6: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 6, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N7: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 7, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N8: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 8, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N9: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 9, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N10: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 10, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N11: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 11, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N12: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 12, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N13: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 13, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N14: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 14, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N15: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 15, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
+	N16: Node(AccuracyCheckInterval := AccuracyCheckInterval, LinkCapacity := LinkCapacity, Load := Load, MeanBurstSize := MeanBurstSize, MyID := 16, NumberOfNodes := NumberOfXNodes*NumberOfYNodes)
 MeshNetwork: MeshBasedNetwork(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, NIBufferCapacity := NIBufferCapacity,
 NumberOfXNodes := NumberOfXNodes, NumberOfYNodes := NumberOfYNodes, RouterProcessingTime := RouterProcessingTime, TransferDelay := NITransferDelay)
 channels
@@ -17,3 +29,15 @@ channels
 	{N2.NI, MeshNetwork.Node2 } 
 	{N3.NI, MeshNetwork.Node3 } 
 	{N4.NI, MeshNetwork.Node4 } 
+	{N5.NI, MeshNetwork.Node5 } 
+	{N6.NI, MeshNetwork.Node6 } 
+	{N7.NI, MeshNetwork.Node7 } 
+	{N8.NI, MeshNetwork.Node8 } 
+	{N9.NI, MeshNetwork.Node9 } 
+	{N10.NI, MeshNetwork.Node10 } 
+	{N11.NI, MeshNetwork.Node11 } 
+	{N12.NI, MeshNetwork.Node12 } 
+	{N13.NI, MeshNetwork.Node13 } 
+	{N14.NI, MeshNetwork.Node14 } 
+	{N15.NI, MeshNetwork.Node15 } 
+	{N16.NI, MeshNetwork.Node16 } 

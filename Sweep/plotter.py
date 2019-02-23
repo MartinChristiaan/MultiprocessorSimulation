@@ -16,7 +16,7 @@ def get_dims(nplots):
 df = pd.read_csv("results_ringtorus.csv")
 
 
-filter_vals = [("NIBufferCapacity",2),("Interconnect","Torus")]
+filter_vals = [("NIBufferCapacity",2)]
 
 
 x_dim = "NumberOfNodes"

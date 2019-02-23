@@ -173,7 +173,7 @@ def simulate(interconnect,nrNodes,load_value,NIBufferCapacity,myid=0):
 
 if __name__ == "__main__":
     config_df = pd.read_csv("config.csv")
-    combi_config = get_all_combinations(config_df)
+    combi_config = get_all_com binations(config_df)
     autosim_multiproc(simulate,combi_config,resultpath="results/Mesh/results.csv")
 
 
