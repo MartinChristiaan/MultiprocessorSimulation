@@ -26,6 +26,7 @@
 \end{abstract}
 \section{Introduction}
 
+
 Moore's law has successfully predicted the exponential growth of processing speed over the past few decades. However, it is expected that this growth will stop in the next 15-20 years and the growth of computation power per processor has already started to slow down. Nevertheless, the demand for computation power has never been higher due to revolutionary but power hungry applications such as machine learning. Multi-core processors are seen as a viable alternative to provide the modern demands for computation power.  
 
  However, as more cores are added to a processors it becomes increasingly important to develop efficient and scalable architectures.  Efficient communication between processors is crucial within multiprocessor architecture. Therefore, the interconnect strategy becomes an important aspect of multiprocessors. In this work the bus, mesh, torus and fat tree topologies as depicted in fig ... will be evaluated for metrics concerning performance and scalability.  
@@ -121,6 +122,52 @@ In order to apply this strategy from the ring to the two-dimensional torus it ha
 
 
 
+\section{Results}
+
+
+\begin{figure*}
+    \centering
+        \begin{subfigure}[b]{.475\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{bus.png}
+            \caption[]%
+            {{\small }}    
+            \label{ov1}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[b]{.475\textwidth}  
+            \centering 
+            \includegraphics[width=\textwidth]{tree.png}
+            \caption[]%
+            {{\small }}    
+            \label{ov2}
+        \end{subfigure}
+        \vskip\baselineskip
+        \hfill
+        \begin{subfigure}[b]{.475\textwidth}  
+            \centering 
+            \includegraphics[width=\textwidth]{torus.png}
+            \caption[]%
+            {{\small }}    
+            \label{ov2}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[b]{.475\textwidth}  
+            \centering 
+            \includegraphics[width=\textwidth]{mesh.png}
+            \caption[]%
+            {{\small }}    
+            \label{ov2}
+        \end{subfigure}
+
+        
+        \caption[ The average and standard deviation of critical parameters ]
+        {\small Illustration of the interconnect topologies a) Bus,b) Mesh, c) Torus, d) Fat tree} 
+        \label{fig:illustration}
+\end{figure*}
+
+
+In fig ..  the results of the simulations have been depicted. Notably the torus performed not as well as expected initially however concidering the routing strategy required it quickly becomes obvious why its not so optimal. For both load values displayed in figure ...  the torus performs and scales badly.  
 
 
 

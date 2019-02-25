@@ -13,54 +13,72 @@ def get_dims(nplots):
     if nplots == 8 : return 2,4
     if nplots == 9 : return 3,3
 
-df = pd.read_csv("results_ringtorus.csv")
+
+def filter_df(df, eq_filter = [],neq_filter = []):
+    for fval in eq_filter:
+        df = df[df[fval[0]] == fval[1]]
+    for fval in neq_filter:
+        df = df[df[fval[0]] != fval[1]]
+    return df
+    
 
 
-filter_vals = [("NIBufferCapacity",2)]
+
+def create_figure(figtype = "paper"):
+    plt.figure(figsize=(3.5,2.5))    
+
+def seperate_dim(df,dim):
+    sep_id = df[dim].unique()
+    sep_id.sort()
+    sep = [df[df[dim] == i] for i in sep_id]
+ 
+    return sep,sep_id
+
+#def create_subplotfigure(figtype = "paper")
+    # if subplot_dim != None:
+    #     plots = df[d.subplot_dim].unique()
+    #     plots.sort()
+    #     nplots = len(plots)
+    #     dimx,dimy = get_dims(nplots)
+    #     plt.figure(figsize=(dimx*3.5,dimy*2.5))    
+ 
 
 
-x_dim = "NumberOfNodes"
-y_dims = [["Latency Average", "Latency Min","Latency Max"],["Sendrate Average",  "Sendrate Min"  ,"Sendrate Max"]] 
-trace_dim = "Load Value"
-# color_dim = "Load Value"
-# symbol_dim = "Load Value"
-# annotation_dim = "Load Value"
-
-for fval in filter_vals:
-    df = df[df[fval[0]] == fval[1]]
-
-df = df.sort_values(x_dim)
-markers = ["o","v","^","<",">","1","2","3","4"]
-
-nplots = len(y_dims)
-dimx,dimy = get_dims(nplots)
-plt.figure()    
-for i in range(nplots):
-    plt.subplot(dimy,dimx,i+1)
-    traces = df[trace_dim].unique()
-    traces.sort()
-    mylines = []
-    for k,trace in enumerate(traces):
-        trace_df = df[df[trace_dim] == trace]
-        y_min = trace_df[y_dims[i][1]]
-        y_max = trace_df[y_dims[i][2]]
+def plot_traces(df,x_dim,y_dim,trace_dim,trace_label_fun = None, title_fun = None,annotate = False):
+    df = df.sort_values(x_dim)
+    markers = ["o","v","^","<",">","1","2","3","4"]
+    
+#     for i,plotd in enumerate(plots):
+#         ax = plt.subplot(dimy,dimx,i+1)
+#         plt_title = str(plotd)
+#         if not title_fun == None:
+#             plt_title = title_fun(plotd)
+#         ax.set_title(plt_title)
+#         plot_df = df[df[d.plot_dim] == plotd]
+#         traces = plot_df[d.trace_dim].unique()
+#         traces.sort()
+# #            mylines = []
+    
+    traces,trace_values = seperate_dim(df,trace_dim)
+    for k,trace in enumerate(trace_values):
+        trace_df = traces[k]
         x = trace_df[x_dim]
-        y = trace_df[y_dims[i][0]]
-        plt.plot(x,y,label = trace_dim.split()[0] + " : " +  str(trace),marker = markers[k])
-        plt.fill_between(x,y_min,y_max, alpha=0.3)
-        line_end = x.values[-1], y.values[-1]
-        # plt.annotate('local max', xy=line_end,  xycoords='data',
-        #     xytext=line_end,horizontalalignment='right', verticalalignment='top'
-        #     )
+        y = trace_df[y_dim]
+        mylabel = str(trace)
+        if trace_label_fun!=None:
+            mylabel = trace_label_fun(trace)
+        plt.plot(x,y,label = mylabel,marker = markers[k])
+        if annotate:
+            line_end = x.values[-1], y.values[-1]
+            plt.annotate(mylabel, xy=line_end,  xycoords='data',
+                xytext=line_end,horizontalalignment='right', verticalalignment='top'
+                )
     plt.legend()
     plt.xlabel(x_dim)
-    plt.ylabel(y_dims[i][0].split()[0])
+    plt.ylabel(y_dim)
     plt.grid(1)
-
-plt.show()
-
-
-
+    plt.tight_layout()
+    return plt
 
 
 
