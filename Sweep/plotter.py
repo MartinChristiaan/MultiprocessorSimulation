@@ -25,8 +25,10 @@ def filter_df(df, eq_filter = [],neq_filter = []):
 
 
 def create_figure(figtype = "paper"):
-    plt.figure(figsize=(3.5,2.5))    
-
+    if figtype == "paper":
+        plt.figure(figsize=(3.5,2.5))    
+   
+    
 def seperate_dim(df,dim):
     sep_id = df[dim].unique()
     sep_id.sort()
