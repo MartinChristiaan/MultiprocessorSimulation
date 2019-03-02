@@ -4,7 +4,7 @@ import "TorusNetworkInterface.poosl"
 cluster class TorusBasedNetwork (FifoCapacity: Integer, FifoProcessingTime: Real, NIBufferCapacity: Integer, NumberOfXNodes: Integer,
 NumberOfYNodes: Integer, RouterProcessingTime: Real, TransferDelay: Real)
 ports
-Node1, Node2, Node3, Node4, Node5, Node6, Node7, Node8, Node9
+Node1, Node2, Node3, Node4, Node5, Node6, Node7, Node8, Node9, Node10, Node11, Node12, Node13, Node14, Node15, Node16
 instances
 Torus: Torusnxn(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 	NI1: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 1, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
@@ -16,6 +16,13 @@ Torus: Torusnxn(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessi
 	NI7: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 7, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
 	NI8: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 8, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
 	NI9: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 9, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI10: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 10, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI11: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 11, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI12: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 12, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI13: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 13, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI14: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 14, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI15: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 15, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI16: TorusNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 16, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
 channels
 {Torus.Out1, Torus.In1, NI1.Network } 
 {Torus.Out2, Torus.In2, NI2.Network } 
@@ -26,6 +33,13 @@ channels
 {Torus.Out7, Torus.In7, NI7.Network } 
 {Torus.Out8, Torus.In8, NI8.Network } 
 {Torus.Out9, Torus.In9, NI9.Network } 
+{Torus.Out10, Torus.In10, NI10.Network } 
+{Torus.Out11, Torus.In11, NI11.Network } 
+{Torus.Out12, Torus.In12, NI12.Network } 
+{Torus.Out13, Torus.In13, NI13.Network } 
+{Torus.Out14, Torus.In14, NI14.Network } 
+{Torus.Out15, Torus.In15, NI15.Network } 
+{Torus.Out16, Torus.In16, NI16.Network } 
 
 {Node1, NI1.Node } 
 {Node2, NI2.Node } 
@@ -36,6 +50,20 @@ channels
 {Node7, NI7.Node } 
 {Node8, NI8.Node } 
 {Node9, NI9.Node } 
+{Node10, NI10.Node } 
+{Node11, NI11.Node } 
+{Node12, NI12.Node } 
+{Node13, NI13.Node } 
+{Node14, NI14.Node } 
+{Node15, NI15.Node } 
+{Node16, NI16.Node } 
+
+
+
+
+
+
+
 
 
 

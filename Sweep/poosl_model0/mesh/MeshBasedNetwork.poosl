@@ -4,7 +4,7 @@ import "MeshNetworkInterface.poosl"
 cluster class MeshBasedNetwork (FifoCapacity: Integer, FifoProcessingTime: Real, NIBufferCapacity: Integer, NumberOfXNodes: Integer,
 NumberOfYNodes: Integer, RouterProcessingTime: Real, TransferDelay: Real)
 ports
-Node1, Node2, Node3, Node4, Node5, Node6, Node7, Node8, Node9
+Node1, Node2, Node3, Node4, Node5, Node6, Node7, Node8, Node9, Node10, Node11, Node12, Node13, Node14, Node15, Node16
 instances
 Mesh: Meshnxn(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessingTime, RouterProcessingTime := RouterProcessingTime)
 	NI1: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 1, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
@@ -16,6 +16,13 @@ Mesh: Meshnxn(FifoCapacity := FifoCapacity, FifoProcessingTime := FifoProcessing
 	NI7: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 7, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
 	NI8: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 8, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
 	NI9: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 9, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI10: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 10, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI11: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 11, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI12: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 12, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI13: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 13, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI14: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 14, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI15: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 15, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
+	NI16: MeshNetworkInterface(BufferCapacity := NIBufferCapacity, MyID := 16, NumberOfXNodes := NumberOfXNodes,NumberOfYNodes := NumberOfYNodes, TransferDelay := TransferDelay)
 channels
 {Mesh.Out1, Mesh.In1, NI1.Network } 
 {Mesh.Out2, Mesh.In2, NI2.Network } 
@@ -26,6 +33,13 @@ channels
 {Mesh.Out7, Mesh.In7, NI7.Network } 
 {Mesh.Out8, Mesh.In8, NI8.Network } 
 {Mesh.Out9, Mesh.In9, NI9.Network } 
+{Mesh.Out10, Mesh.In10, NI10.Network } 
+{Mesh.Out11, Mesh.In11, NI11.Network } 
+{Mesh.Out12, Mesh.In12, NI12.Network } 
+{Mesh.Out13, Mesh.In13, NI13.Network } 
+{Mesh.Out14, Mesh.In14, NI14.Network } 
+{Mesh.Out15, Mesh.In15, NI15.Network } 
+{Mesh.Out16, Mesh.In16, NI16.Network } 
 
 {Node1, NI1.Node } 
 {Node2, NI2.Node } 
@@ -36,6 +50,20 @@ channels
 {Node7, NI7.Node } 
 {Node8, NI8.Node } 
 {Node9, NI9.Node } 
+{Node10, NI10.Node } 
+{Node11, NI11.Node } 
+{Node12, NI12.Node } 
+{Node13, NI13.Node } 
+{Node14, NI14.Node } 
+{Node15, NI15.Node } 
+{Node16, NI16.Node } 
+
+
+
+
+
+
+
 
 
 

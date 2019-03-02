@@ -1,0 +1,17 @@
+importlib "torus/instances.poosl"
+
+system
+instances
+	SoC: Torus_nxn(
+		AccuracyCheckInterval := 1.0, 
+		FifoCapacity := 4, 
+		FifoProcessingTime := 0.00025, 
+		LinkCapacity := 600.0, 
+		Load := 0.95, 
+		MeanBurstSize := 12.0, 
+		NIBufferCapacity := 4, 
+		NumberOfXNodes := 4, 
+		NumberOfYNodes := 2, 
+		RouterProcessingTime := 0.0006,
+		NITransferDelay := 0.0005)
+channels

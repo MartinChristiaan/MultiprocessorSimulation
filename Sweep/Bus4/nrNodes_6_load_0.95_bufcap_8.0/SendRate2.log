@@ -1,0 +1,3 @@
+Statistics for the Long Run Time Average SendRate2.log with Accuracy 0.95Point Estimation:	Confidence Interval:			Confidence Level:	Relative Error:		Accurate:
+-------------------------------------------------------------------------------------------------------------------------
+Not Specified		[-inf, inf]				0.9			inf			falseNot Specified		[-inf, inf]				0.9			inf			false420.131581388694	[413.49139595072, 426.771766826667]	0.9			0.0160588237216065		true420.131581388694	[413.49139595072, 426.771766826667]	0.9			0.0160588237216065		true418.946902596577	[414.544428238759, 423.349376954396]	0.9			0.0106200302257657		true418.365820900996	[415.072958101759, 421.658683700234]	0.9			0.00793321447462233		true
