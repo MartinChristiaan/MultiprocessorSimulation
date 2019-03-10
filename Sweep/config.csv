@@ -1,7 +1,0 @@
-Interconnect,NumberOfNodes,Load Value,NIBufferCapacity
-Mesh,4,0.95,1
-Torus,6,,2
-Bus,8,,4
-,9,,6
-,12,,8
-,16,,
